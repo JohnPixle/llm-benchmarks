@@ -1,0 +1,17 @@
+{
+  "sequence": 101,
+  "run_id": "R-F0660E6D7F",
+  "pair_key": "S5-V3",
+  "scenario_id": "S5",
+  "variant": 3,
+  "cohort": "muse",
+  "model": "muse-spark-1.3-high",
+  "prompt_file": "prompts/S5-V3.txt",
+  "prompt_sha256": "1840788eb1a3e01d1c52334e4097b0c91e851c78ec744bdb6a16e8b3a69cb082",
+  "status": "pending",
+  "agent_id": "2b5fb579-856b-4b92-b99c-673a175a879f",
+  "captured_at": "2026-10-13T20:31:55.971Z",
+  "completion_status": "success",
+  "agent_tool_calls": [],
+  "isolation_status": "clean"
+}

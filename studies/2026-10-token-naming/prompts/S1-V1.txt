@@ -1,0 +1,33 @@
+You are completing one isolated naming task. Do not use tools, inspect files, browse, or ask questions.
+
+Context: A responsive analytics product with a navigation rail, KPI cards, charts, data tables, filters, and account controls.
+
+Create one design-token identifier for each concept below. Choose the naming syntax, hierarchy, vocabulary, prefixes, separators, and casing you consider most appropriate. Do not omit, combine, or add concepts.
+
+- S1-C01: The central product-brand color
+- S1-C02: The lowest page background layer
+- S1-C03: A raised panel background layer
+- S1-C04: A subtle divider color
+- S1-C05: Primary readable text
+- S1-C06: De-emphasized supporting text
+- S1-C07: The default primary action color
+- S1-C08: The hovered primary action color
+- S1-C09: The largest dashboard page heading
+- S1-C10: A heading for a dashboard section
+- S1-C11: Default interface body copy
+- S1-C12: Compact metadata and helper copy
+- S1-C13: The smallest repeated interface gap
+- S1-C14: The standard content-group gap
+- S1-C15: The corner rounding used by controls
+- S1-C16: The elevation used by floating panels
+- S1-C17: The primary button background
+- S1-C18: The primary button label color
+- S1-C19: The internal padding of a KPI card
+- S1-C20: The maximum width of the main content region
+
+Return JSON only. Do not use Markdown fences, commentary, rationale, or additional keys.
+
+Required shape:
+{"schema_version":"1","items":[{"concept_id":"an ID from the list","token":"your identifier"}]}
+
+The items array must contain exactly 20 objects, one for every supplied concept ID.

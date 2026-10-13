@@ -1,0 +1,15 @@
+{
+  "name": "token-naming-benchmark",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "validate:protocol": "node scripts/validate-protocol.mjs",
+    "validate:runs": "node scripts/validate-runs.mjs",
+    "analyze": "node scripts/analyze.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

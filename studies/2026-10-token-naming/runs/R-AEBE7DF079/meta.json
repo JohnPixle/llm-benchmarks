@@ -1,0 +1,17 @@
+{
+  "sequence": 22,
+  "run_id": "R-AEBE7DF079",
+  "pair_key": "S4-V1",
+  "scenario_id": "S4",
+  "variant": 1,
+  "cohort": "gpt",
+  "model": "gpt-5.6-sol-medium",
+  "prompt_file": "prompts/S4-V1.txt",
+  "prompt_sha256": "89af822702b59901556e4e096010ad60fe3efea65bb5b9e6f677f97dc1b304d5",
+  "status": "pending",
+  "agent_id": "e79e6373-1806-4615-a5bb-1ea90ea1e879",
+  "captured_at": "2026-10-13T20:31:55.937Z",
+  "completion_status": "success",
+  "agent_tool_calls": [],
+  "isolation_status": "clean"
+}

@@ -1,0 +1,17 @@
+{
+  "sequence": 59,
+  "run_id": "R-DA05B0EE55",
+  "pair_key": "S2-V3",
+  "scenario_id": "S2",
+  "variant": 3,
+  "cohort": "fable",
+  "model": "claude-fable-5-1-thinking-high",
+  "prompt_file": "prompts/S2-V3.txt",
+  "prompt_sha256": "e36e6db013f842861684a73b438abc3b38aabaf9b6c73d9ac990460ee553f83b",
+  "status": "pending",
+  "agent_id": "26442911-7070-48e4-8b75-ad2a9b3dffd3",
+  "captured_at": "2026-10-13T20:31:55.953Z",
+  "completion_status": "success",
+  "agent_tool_calls": [],
+  "isolation_status": "clean"
+}

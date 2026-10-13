@@ -1,0 +1,642 @@
+{
+  "generated_at": "2026-10-13T20:35:53.644Z",
+  "cohort_order": [
+    "claude",
+    "gpt",
+    "fable",
+    "grok",
+    "muse"
+  ],
+  "runs": 125,
+  "strict_valid_runs": 121,
+  "strict_invalid_runs": 4,
+  "recovered_runs": 4,
+  "token_rows": 2500,
+  "paired_comparisons": 500,
+  "overall": {
+    "comparisons": 500,
+    "pairwise": {
+      "claude__gpt": {
+        "a": "claude",
+        "b": "gpt",
+        "raw_match_pct": 27.8,
+        "canonical_match_pct": 38
+      },
+      "claude__fable": {
+        "a": "claude",
+        "b": "fable",
+        "raw_match_pct": 23.2,
+        "canonical_match_pct": 48.6
+      },
+      "claude__grok": {
+        "a": "claude",
+        "b": "grok",
+        "raw_match_pct": 25.2,
+        "canonical_match_pct": 34.2
+      },
+      "claude__muse": {
+        "a": "claude",
+        "b": "muse",
+        "raw_match_pct": 18.2,
+        "canonical_match_pct": 27.6
+      },
+      "gpt__fable": {
+        "a": "gpt",
+        "b": "fable",
+        "raw_match_pct": 17.6,
+        "canonical_match_pct": 33.2
+      },
+      "gpt__grok": {
+        "a": "gpt",
+        "b": "grok",
+        "raw_match_pct": 29.8,
+        "canonical_match_pct": 31
+      },
+      "gpt__muse": {
+        "a": "gpt",
+        "b": "muse",
+        "raw_match_pct": 25.2,
+        "canonical_match_pct": 27.2
+      },
+      "fable__grok": {
+        "a": "fable",
+        "b": "grok",
+        "raw_match_pct": 16.8,
+        "canonical_match_pct": 36.2
+      },
+      "fable__muse": {
+        "a": "fable",
+        "b": "muse",
+        "raw_match_pct": 16.4,
+        "canonical_match_pct": 30.6
+      },
+      "grok__muse": {
+        "a": "grok",
+        "b": "muse",
+        "raw_match_pct": 27.4,
+        "canonical_match_pct": 28
+      }
+    },
+    "all_models_canonical_match_pct": 12.6,
+    "majority_canonical_match_pct": 50.8,
+    "max_agreeing_distribution": {
+      "1": 62,
+      "2": 184,
+      "3": 121,
+      "4": 70,
+      "5": 63
+    },
+    "mean_pairwise_canonical_match_pct": 33.5
+  },
+  "cohorts": {
+    "claude": {
+      "label": "Claude Opus 5.5",
+      "model": "claude-opus-5-5-medium",
+      "runs": 25,
+      "strict_valid_runs": 25,
+      "tokens": 500,
+      "average_segments": 3.27,
+      "syntax": {
+        "dot-path": 320,
+        "kebab-case": 180
+      },
+      "root_segments": {
+        "color": 226,
+        "space": 59,
+        "typography": 59,
+        "font": 25,
+        "radius": 25,
+        "button": 21,
+        "breakpoint": 15,
+        "shadow": 15,
+        "text": 12,
+        "elevation": 10,
+        "size": 9,
+        "card": 8,
+        "layout": 5,
+        "type": 4,
+        "input": 3,
+        "kpi": 3,
+        "content": 1
+      },
+      "unique_raw_names": 244,
+      "unique_canonical_names": 203,
+      "within_model_pairwise_agreement_pct": 57.3,
+      "unanimous_concepts": 34,
+      "unanimous_concepts_pct": 34
+    },
+    "gpt": {
+      "label": "GPT-5.6 Sol",
+      "model": "gpt-5.6-sol-medium",
+      "runs": 25,
+      "strict_valid_runs": 21,
+      "tokens": 500,
+      "average_segments": 3.38,
+      "syntax": {
+        "dot-path": 500
+      },
+      "root_segments": {
+        "color": 242,
+        "typography": 100,
+        "spacing": 52,
+        "radius": 25,
+        "shadow": 19,
+        "breakpoint": 15,
+        "space": 14,
+        "size": 11,
+        "component": 6,
+        "elevation": 6,
+        "button": 4,
+        "layout": 3,
+        "card": 2,
+        "section": 1
+      },
+      "unique_raw_names": 221,
+      "unique_canonical_names": 207,
+      "within_model_pairwise_agreement_pct": 55.7,
+      "unanimous_concepts": 31,
+      "unanimous_concepts_pct": 31
+    },
+    "fable": {
+      "label": "Claude Fable 5.1",
+      "model": "claude-fable-5-1-thinking-high",
+      "runs": 25,
+      "strict_valid_runs": 25,
+      "tokens": 500,
+      "average_segments": 3.14,
+      "syntax": {
+        "dot-path": 240,
+        "css-custom-property": 140,
+        "kebab-case": 120
+      },
+      "root_segments": {
+        "color": 224,
+        "typography": 72,
+        "space": 56,
+        "radius": 25,
+        "button": 17,
+        "font": 16,
+        "breakpoint": 15,
+        "shadow": 14,
+        "elevation": 11,
+        "card": 9,
+        "size": 9,
+        "text": 8,
+        "component": 6,
+        "layout": 5,
+        "field": 4,
+        "type": 4,
+        "kpi": 2,
+        "badge": 1,
+        "product": 1,
+        "section": 1
+      },
+      "unique_raw_names": 287,
+      "unique_canonical_names": 199,
+      "within_model_pairwise_agreement_pct": 55.2,
+      "unanimous_concepts": 28,
+      "unanimous_concepts_pct": 28
+    },
+    "grok": {
+      "label": "Grok 4.7",
+      "model": "grok-4.7-high-fast",
+      "runs": 25,
+      "strict_valid_runs": 25,
+      "tokens": 500,
+      "average_segments": 3.13,
+      "syntax": {
+        "dot-path": 480,
+        "kebab-case": 20
+      },
+      "root_segments": {
+        "color": 251,
+        "typography": 72,
+        "space": 69,
+        "elevation": 25,
+        "radius": 25,
+        "type": 19,
+        "breakpoint": 15,
+        "layout": 6,
+        "measure": 5,
+        "font": 4,
+        "size": 4,
+        "text": 4,
+        "card": 1
+      },
+      "unique_raw_names": 229,
+      "unique_canonical_names": 214,
+      "within_model_pairwise_agreement_pct": 54.1,
+      "unanimous_concepts": 30,
+      "unanimous_concepts_pct": 30
+    },
+    "muse": {
+      "label": "Muse Spark 1.3",
+      "model": "muse-spark-1.3-high",
+      "runs": 25,
+      "strict_valid_runs": 25,
+      "tokens": 500,
+      "average_segments": 3.32,
+      "syntax": {
+        "dot-path": 500
+      },
+      "root_segments": {
+        "color": 240,
+        "typography": 52,
+        "type": 40,
+        "spacing": 35,
+        "space": 28,
+        "radius": 25,
+        "component": 21,
+        "breakpoint": 15,
+        "elevation": 14,
+        "layout": 13,
+        "shadow": 11,
+        "text": 4,
+        "size": 1,
+        "width": 1
+      },
+      "unique_raw_names": 252,
+      "unique_canonical_names": 238,
+      "within_model_pairwise_agreement_pct": 45.6,
+      "unanimous_concepts": 16,
+      "unanimous_concepts_pct": 16
+    }
+  },
+  "scenarios": {
+    "S1": {
+      "comparisons": 100,
+      "pairwise": {
+        "claude__gpt": {
+          "a": "claude",
+          "b": "gpt",
+          "raw_match_pct": 37,
+          "canonical_match_pct": 54
+        },
+        "claude__fable": {
+          "a": "claude",
+          "b": "fable",
+          "raw_match_pct": 36,
+          "canonical_match_pct": 59
+        },
+        "claude__grok": {
+          "a": "claude",
+          "b": "grok",
+          "raw_match_pct": 28,
+          "canonical_match_pct": 37
+        },
+        "claude__muse": {
+          "a": "claude",
+          "b": "muse",
+          "raw_match_pct": 29,
+          "canonical_match_pct": 42
+        },
+        "gpt__fable": {
+          "a": "gpt",
+          "b": "fable",
+          "raw_match_pct": 35,
+          "canonical_match_pct": 54
+        },
+        "gpt__grok": {
+          "a": "gpt",
+          "b": "grok",
+          "raw_match_pct": 43,
+          "canonical_match_pct": 43
+        },
+        "gpt__muse": {
+          "a": "gpt",
+          "b": "muse",
+          "raw_match_pct": 47,
+          "canonical_match_pct": 49
+        },
+        "fable__grok": {
+          "a": "fable",
+          "b": "grok",
+          "raw_match_pct": 27,
+          "canonical_match_pct": 45
+        },
+        "fable__muse": {
+          "a": "fable",
+          "b": "muse",
+          "raw_match_pct": 30,
+          "canonical_match_pct": 49
+        },
+        "grok__muse": {
+          "a": "grok",
+          "b": "muse",
+          "raw_match_pct": 39,
+          "canonical_match_pct": 39
+        }
+      },
+      "all_models_canonical_match_pct": 28,
+      "majority_canonical_match_pct": 60,
+      "max_agreeing_distribution": {
+        "1": 11,
+        "2": 29,
+        "3": 15,
+        "4": 17,
+        "5": 28
+      },
+      "mean_pairwise_canonical_match_pct": 47.1
+    },
+    "S2": {
+      "comparisons": 100,
+      "pairwise": {
+        "claude__gpt": {
+          "a": "claude",
+          "b": "gpt",
+          "raw_match_pct": 39,
+          "canonical_match_pct": 45
+        },
+        "claude__fable": {
+          "a": "claude",
+          "b": "fable",
+          "raw_match_pct": 34,
+          "canonical_match_pct": 47
+        },
+        "claude__grok": {
+          "a": "claude",
+          "b": "grok",
+          "raw_match_pct": 23,
+          "canonical_match_pct": 26
+        },
+        "claude__muse": {
+          "a": "claude",
+          "b": "muse",
+          "raw_match_pct": 14,
+          "canonical_match_pct": 14
+        },
+        "gpt__fable": {
+          "a": "gpt",
+          "b": "fable",
+          "raw_match_pct": 24,
+          "canonical_match_pct": 40
+        },
+        "gpt__grok": {
+          "a": "gpt",
+          "b": "grok",
+          "raw_match_pct": 16,
+          "canonical_match_pct": 19
+        },
+        "gpt__muse": {
+          "a": "gpt",
+          "b": "muse",
+          "raw_match_pct": 18,
+          "canonical_match_pct": 19
+        },
+        "fable__grok": {
+          "a": "fable",
+          "b": "grok",
+          "raw_match_pct": 16,
+          "canonical_match_pct": 26
+        },
+        "fable__muse": {
+          "a": "fable",
+          "b": "muse",
+          "raw_match_pct": 23,
+          "canonical_match_pct": 28
+        },
+        "grok__muse": {
+          "a": "grok",
+          "b": "muse",
+          "raw_match_pct": 10,
+          "canonical_match_pct": 12
+        }
+      },
+      "all_models_canonical_match_pct": 3,
+      "majority_canonical_match_pct": 49,
+      "max_agreeing_distribution": {
+        "1": 14,
+        "2": 37,
+        "3": 28,
+        "4": 18,
+        "5": 3
+      },
+      "mean_pairwise_canonical_match_pct": 27.6
+    },
+    "S3": {
+      "comparisons": 100,
+      "pairwise": {
+        "claude__gpt": {
+          "a": "claude",
+          "b": "gpt",
+          "raw_match_pct": 38,
+          "canonical_match_pct": 42
+        },
+        "claude__fable": {
+          "a": "claude",
+          "b": "fable",
+          "raw_match_pct": 32,
+          "canonical_match_pct": 57
+        },
+        "claude__grok": {
+          "a": "claude",
+          "b": "grok",
+          "raw_match_pct": 51,
+          "canonical_match_pct": 55
+        },
+        "claude__muse": {
+          "a": "claude",
+          "b": "muse",
+          "raw_match_pct": 31,
+          "canonical_match_pct": 34
+        },
+        "gpt__fable": {
+          "a": "gpt",
+          "b": "fable",
+          "raw_match_pct": 24,
+          "canonical_match_pct": 39
+        },
+        "gpt__grok": {
+          "a": "gpt",
+          "b": "grok",
+          "raw_match_pct": 42,
+          "canonical_match_pct": 45
+        },
+        "gpt__muse": {
+          "a": "gpt",
+          "b": "muse",
+          "raw_match_pct": 28,
+          "canonical_match_pct": 32
+        },
+        "fable__grok": {
+          "a": "fable",
+          "b": "grok",
+          "raw_match_pct": 31,
+          "canonical_match_pct": 53
+        },
+        "fable__muse": {
+          "a": "fable",
+          "b": "muse",
+          "raw_match_pct": 19,
+          "canonical_match_pct": 35
+        },
+        "grok__muse": {
+          "a": "grok",
+          "b": "muse",
+          "raw_match_pct": 39,
+          "canonical_match_pct": 40
+        }
+      },
+      "all_models_canonical_match_pct": 21,
+      "majority_canonical_match_pct": 64,
+      "max_agreeing_distribution": {
+        "1": 5,
+        "2": 31,
+        "3": 27,
+        "4": 16,
+        "5": 21
+      },
+      "mean_pairwise_canonical_match_pct": 43.2
+    },
+    "S4": {
+      "comparisons": 100,
+      "pairwise": {
+        "claude__gpt": {
+          "a": "claude",
+          "b": "gpt",
+          "raw_match_pct": 9,
+          "canonical_match_pct": 21
+        },
+        "claude__fable": {
+          "a": "claude",
+          "b": "fable",
+          "raw_match_pct": 14,
+          "canonical_match_pct": 37
+        },
+        "claude__grok": {
+          "a": "claude",
+          "b": "grok",
+          "raw_match_pct": 7,
+          "canonical_match_pct": 21
+        },
+        "claude__muse": {
+          "a": "claude",
+          "b": "muse",
+          "raw_match_pct": 3,
+          "canonical_match_pct": 17
+        },
+        "gpt__fable": {
+          "a": "gpt",
+          "b": "fable",
+          "raw_match_pct": 5,
+          "canonical_match_pct": 19
+        },
+        "gpt__grok": {
+          "a": "gpt",
+          "b": "grok",
+          "raw_match_pct": 19,
+          "canonical_match_pct": 19
+        },
+        "gpt__muse": {
+          "a": "gpt",
+          "b": "muse",
+          "raw_match_pct": 13,
+          "canonical_match_pct": 16
+        },
+        "fable__grok": {
+          "a": "fable",
+          "b": "grok",
+          "raw_match_pct": 10,
+          "canonical_match_pct": 32
+        },
+        "fable__muse": {
+          "a": "fable",
+          "b": "muse",
+          "raw_match_pct": 10,
+          "canonical_match_pct": 24
+        },
+        "grok__muse": {
+          "a": "grok",
+          "b": "muse",
+          "raw_match_pct": 30,
+          "canonical_match_pct": 30
+        }
+      },
+      "all_models_canonical_match_pct": 5,
+      "majority_canonical_match_pct": 42,
+      "max_agreeing_distribution": {
+        "1": 18,
+        "2": 40,
+        "3": 32,
+        "4": 5,
+        "5": 5
+      },
+      "mean_pairwise_canonical_match_pct": 23.6
+    },
+    "S5": {
+      "comparisons": 100,
+      "pairwise": {
+        "claude__gpt": {
+          "a": "claude",
+          "b": "gpt",
+          "raw_match_pct": 16,
+          "canonical_match_pct": 28
+        },
+        "claude__fable": {
+          "a": "claude",
+          "b": "fable",
+          "raw_match_pct": 0,
+          "canonical_match_pct": 43
+        },
+        "claude__grok": {
+          "a": "claude",
+          "b": "grok",
+          "raw_match_pct": 17,
+          "canonical_match_pct": 32
+        },
+        "claude__muse": {
+          "a": "claude",
+          "b": "muse",
+          "raw_match_pct": 14,
+          "canonical_match_pct": 31
+        },
+        "gpt__fable": {
+          "a": "gpt",
+          "b": "fable",
+          "raw_match_pct": 0,
+          "canonical_match_pct": 14
+        },
+        "gpt__grok": {
+          "a": "gpt",
+          "b": "grok",
+          "raw_match_pct": 29,
+          "canonical_match_pct": 29
+        },
+        "gpt__muse": {
+          "a": "gpt",
+          "b": "muse",
+          "raw_match_pct": 20,
+          "canonical_match_pct": 20
+        },
+        "fable__grok": {
+          "a": "fable",
+          "b": "grok",
+          "raw_match_pct": 0,
+          "canonical_match_pct": 25
+        },
+        "fable__muse": {
+          "a": "fable",
+          "b": "muse",
+          "raw_match_pct": 0,
+          "canonical_match_pct": 17
+        },
+        "grok__muse": {
+          "a": "grok",
+          "b": "muse",
+          "raw_match_pct": 19,
+          "canonical_match_pct": 19
+        }
+      },
+      "all_models_canonical_match_pct": 6,
+      "majority_canonical_match_pct": 39,
+      "max_agreeing_distribution": {
+        "1": 14,
+        "2": 47,
+        "3": 19,
+        "4": 14,
+        "5": 6
+      },
+      "mean_pairwise_canonical_match_pct": 25.8
+    }
+  }
+}

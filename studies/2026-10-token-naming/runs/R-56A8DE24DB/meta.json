@@ -1,0 +1,17 @@
+{
+  "sequence": 86,
+  "run_id": "R-56A8DE24DB",
+  "pair_key": "S4-V1",
+  "scenario_id": "S4",
+  "variant": 1,
+  "cohort": "grok",
+  "model": "grok-4.7-high-fast",
+  "prompt_file": "prompts/S4-V1.txt",
+  "prompt_sha256": "89af822702b59901556e4e096010ad60fe3efea65bb5b9e6f677f97dc1b304d5",
+  "status": "pending",
+  "agent_id": "8cc5ab24-d2e7-4d55-9423-a61e9e8fce41",
+  "captured_at": "2026-10-13T20:31:55.965Z",
+  "completion_status": "success",
+  "agent_tool_calls": [],
+  "isolation_status": "clean"
+}

@@ -1,0 +1,33 @@
+You are completing one isolated naming task. Do not use tools, inspect files, browse, or ask questions.
+
+Context: A consulting firm's marketing site with a confident hero, service summaries, case studies, testimonials, team profiles, and lead-generation forms.
+
+Create one design-token identifier for each concept below. Choose the naming syntax, hierarchy, vocabulary, prefixes, separators, and casing you consider most appropriate. Do not omit, combine, or add concepts.
+
+- S4-C05: The strongest heading and body text color
+- S4-C06: The supporting-copy color
+- S4-C07: The default call-to-action color
+- S4-C08: The keyboard-focus indicator color
+- S4-C09: The high-impact hero statement
+- S4-C10: A heading introducing a service group
+- S4-C11: Default marketing body copy
+- S4-C12: Testimonial attribution copy
+- S4-C13: The compact gap used inside small content groups
+- S4-C14: The vertical separation between major page sections
+- S4-C15: The corner rounding used by form controls
+- S4-C16: The elevation used by a featured case-study card
+- S4-C17: The consultation button background
+- S4-C18: The consultation button label color
+- S4-C19: The internal padding of a testimonial card
+- S4-C20: The maximum width of a standard marketing section
+- S4-C01: The firm's primary identity color
+- S4-C02: The base page background
+- S4-C03: A contrasting section background
+- S4-C04: A restrained decorative-line color
+
+Return JSON only. Do not use Markdown fences, commentary, rationale, or additional keys.
+
+Required shape:
+{"schema_version":"1","items":[{"concept_id":"an ID from the list","token":"your identifier"}]}
+
+The items array must contain exactly 20 objects, one for every supplied concept ID.

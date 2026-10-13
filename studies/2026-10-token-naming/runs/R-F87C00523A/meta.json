@@ -1,0 +1,17 @@
+{
+  "sequence": 40,
+  "run_id": "R-F87C00523A",
+  "pair_key": "S5-V2",
+  "scenario_id": "S5",
+  "variant": 2,
+  "cohort": "claude",
+  "model": "claude-opus-5-5-medium",
+  "prompt_file": "prompts/S5-V2.txt",
+  "prompt_sha256": "1f1c76b877908f12ad7fd9ecc4ee3b4210191328cbc1b6ff391205f689d21b14",
+  "status": "pending",
+  "agent_id": "18ab7e48-e366-4b80-b083-729f1ea6e34d",
+  "captured_at": "2026-10-13T20:31:55.945Z",
+  "completion_status": "success",
+  "agent_tool_calls": [],
+  "isolation_status": "clean"
+}

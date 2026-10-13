@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Token Naming Instinct</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: one reading column (72ch) for prose; tables and charts may stretch to 1040px.
+   Token names are the subject, so they always appear in mono. Four model colors are fixed
+   categorical slots (validated for CVD in light and dark) and never change role. */
+:root {
+  --bg: #fbfaf7; --surface: #ffffff; --surface-2: #f2f0ea;
+  --ink: #171614; --ink-2: #514e47; --ink-3: #8a8780;
+  --line: #e4e1d8; --line-2: #cfcbbf; --accent: #2a5bd7;
+  --opus: #2a78d6; --gpt: #eb6834; --fable: #1baf7a; --grok: #eda100; --muse: #e87ba4;
+  --seq-0: #f2f0ea; --seq-1: #cde2fb; --seq-2: #9ec5f4; --seq-3: #5598e7; --seq-4: #256abf; --seq-5: #0d366b;
+  --ok-bg: #e4f4e6; --ok-ink: #1d5c25; --mid-bg: #fbf1d6; --mid-ink: #6b4b00;
+  --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161614; --surface: #1e1e1b; --surface-2: #26261f;
+    --ink: #f4f2ec; --ink-2: #c3c0b5; --ink-3: #8a8780;
+    --line: #2d2d29; --line-2: #3e3e38; --accent: #6c93ff;
+    --opus: #3987e5; --gpt: #d95926; --fable: #199e70; --grok: #c98500; --muse: #d55181;
+    --seq-0: #26261f; --seq-1: #1f3a5e; --seq-2: #1c5cab; --seq-3: #3987e5; --seq-4: #6da7ec; --seq-5: #b7d3f6;
+    --ok-bg: #1d3a22; --ok-ink: #a8e0b0; --mid-bg: #3d3113; --mid-ink: #f0d58a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161614; --surface: #1e1e1b; --surface-2: #26261f;
+  --ink: #f4f2ec; --ink-2: #c3c0b5; --ink-3: #8a8780;
+  --line: #2d2d29; --line-2: #3e3e38; --accent: #6c93ff;
+  --opus: #3987e5; --gpt: #d95926; --fable: #199e70; --grok: #c98500; --muse: #d55181;
+  --seq-0: #26261f; --seq-1: #1f3a5e; --seq-2: #1c5cab; --seq-3: #3987e5; --seq-4: #6da7ec; --seq-5: #b7d3f6;
+  --ok-bg: #1d3a22; --ok-ink: #a8e0b0; --mid-bg: #3d3113; --mid-ink: #f0d58a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.55; padding-block: 0 96px; padding-inline: clamp(16px, 4vw, 40px); -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1040px; margin-inline: auto; }
+.prose { max-width: 72ch; }
+h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.05; letter-spacing: -0.025em; }
+h2 { font-size: clamp(24px, 3vw, 32px); line-height: 1.15; margin-top: 8px; }
+h3 { font-size: 19px; margin-top: 28px; margin-bottom: 8px; }
+p { margin: 12px 0; }
+p.lede { font-size: 20px; color: var(--ink-2); line-height: 1.45; }
+a { color: var(--accent); }
+code, .tok { font-family: var(--mono); font-size: 0.86em; }
+code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px; }
+.model { font-weight: 600; white-space: nowrap; }
+.model::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; background: var(--c); }
+.m-opus { --c: var(--opus); } .m-gpt { --c: var(--gpt); } .m-fable { --c: var(--fable); } .m-grok { --c: var(--grok); } .m-muse { --c: var(--muse); }
+
+header { padding-block: 56px 32px; border-bottom: 1px solid var(--line); }
+header .theme-row { display: flex; justify-content: flex-end; margin-bottom: 18px; }
+.theme-toggle { display: inline-flex; max-width: 100%; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 2px; gap: 2px; }
+.theme-toggle button { font: 500 12px/1 var(--sans); letter-spacing: 0.02em; color: var(--ink-2); background: transparent; border: 0; border-radius: 6px; padding: 6px 10px; cursor: pointer; }
+.theme-toggle button:hover { color: var(--ink); }
+.theme-toggle button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+.theme-toggle button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+header .meta { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 22px; font-size: 14px; color: var(--ink-2); }
+header .meta span b { color: var(--ink); font-weight: 600; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; margin-top: 22px; }
+nav.toc a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid transparent; }
+nav.toc a:hover { color: var(--ink); border-color: var(--line-2); }
+
+section { padding-block: 48px 8px; border-bottom: 1px solid var(--line); }
+section:last-of-type { border-bottom: 0; }
+.section-head { display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: start; }
+.section-head .num { font-family: var(--mono); font-size: 13px; color: var(--ink-3); padding-top: 10px; }
+@media (max-width: 640px) { .section-head { grid-template-columns: 1fr; gap: 4px; } }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 28px 0 8px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; min-width: 0; }
+.kpi .v { font-size: 38px; font-weight: 600; line-height: 1.05; letter-spacing: -0.02em; }
+.kpi .l { font-size: 14px; color: var(--ink-2); margin-top: 8px; line-height: 1.4; }
+
+figure { margin: 28px 0 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px 14px; min-width: 0; }
+figure .ft { font-weight: 600; font-size: 16px; margin-bottom: 2px; }
+figure .fs { font-size: 13px; color: var(--ink-2); margin-bottom: 14px; }
+figure figcaption { font-size: 13.5px; color: var(--ink-2); margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; line-height: 1.45; }
+figure svg { display: block; width: 100%; height: auto; overflow: visible; }
+figure svg text { font-family: var(--sans); fill: var(--ink-2); font-size: 12px; }
+figure svg .ax { fill: var(--ink-3); font-size: 11px; }
+figure svg .tk { font-family: var(--mono); font-size: 11.5px; fill: var(--ink); }
+figure svg .val { fill: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+figure svg .grid { stroke: var(--line); stroke-width: 1; }
+figure svg .base { stroke: var(--line-2); stroke-width: 1; }
+figure svg .cell-t { font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.two > figure, .two > .card { margin: 12px 0; }
+@media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+.scrollx { overflow-x: auto; }
+.scrollx > svg { min-width: 680px; }
+
+#tip { position: fixed; z-index: 10; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 12.5px; line-height: 1.4; padding: 7px 10px; border-radius: 6px; max-width: 300px; box-shadow: 0 6px 20px rgba(0,0,0,.18); opacity: 0; transition: opacity .12s; }
+#tip .t { font-family: var(--mono); }
+#tip.on { opacity: 1; }
+.hit { cursor: default; }
+.hit:hover { filter: brightness(0.92); }
+
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); font-weight: 600; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+tbody tr:hover { background: var(--surface-2); }
+.hero-table { font-size: 13px; }
+.hero-table td.tok, .hero-table th.tok { font-family: var(--mono); font-size: 12px; white-space: nowrap; }
+.hero-table th.c-opus { border-top: 3px solid var(--opus); } .hero-table th.c-gpt { border-top: 3px solid var(--gpt); } .hero-table th.c-fable { border-top: 3px solid var(--fable); } .hero-table th.c-grok { border-top: 3px solid var(--grok); } .hero-table th.c-muse { border-top: 3px solid var(--muse); }
+.hero-table td.need { min-width: 190px; }
+.hero-table tr.all td.need::after { content: "all five agree"; display: inline-block; margin-left: 8px; font-size: 10.5px; font-weight: 600; padding: 1px 7px; border-radius: 999px; background: var(--ok-bg); color: var(--ok-ink); white-space: nowrap; }
+.hero-table tr.maj td.need::after { content: "3 or more agree"; display: inline-block; margin-left: 8px; font-size: 10.5px; font-weight: 600; padding: 1px 7px; border-radius: 999px; background: var(--mid-bg); color: var(--mid-ink); white-space: nowrap; }
+.hero-table tr.grp td { border-top: 2px solid var(--line-2); }
+.hero-table td.odd { color: var(--ink-3); }
+
+.insight { border-left: 3px solid var(--accent); padding: 4px 0 4px 18px; margin: 24px 0; }
+.insight b { display: block; font-size: 17px; margin-bottom: 4px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 20px 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; min-width: 0; font-size: 15px; }
+.card h4 { margin: 0 0 8px; font-size: 16px; }
+.card p { margin: 6px 0; color: var(--ink-2); font-size: 14.5px; }
+.card ul { margin: 6px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 14.5px; }
+.card li { margin: 4px 0; }
+.card.ok { border-color: color-mix(in srgb, var(--ok-ink) 35%, var(--line)); }
+.card.ok h4 { color: var(--ok-ink); }
+.card.warn { border-color: color-mix(in srgb, var(--mid-ink) 40%, var(--line)); }
+.card.warn h4 { color: var(--mid-ink); }
+ol.takeaways { padding-left: 0; list-style: none; counter-reset: t; margin: 24px 0; display: grid; gap: 10px; }
+ol.takeaways li { counter-increment: t; display: grid; grid-template-columns: 44px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+ol.takeaways li::before { content: counter(t); font-family: var(--mono); font-size: 22px; font-weight: 600; color: var(--accent); line-height: 1; padding-top: 2px; }
+ol.takeaways b { display: block; margin-bottom: 3px; }
+ol.takeaways span { color: var(--ink-2); font-size: 15px; grid-column: 2; }
+
+.grammar { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; margin: 20px 0 8px; }
+.grammar .seg { flex: 1 1 150px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+.grammar .seg .w { font-family: var(--mono); font-size: 22px; font-weight: 600; }
+.grammar .seg .r { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); margin-top: 6px; font-weight: 600; }
+.grammar .seg .e { font-size: 13.5px; color: var(--ink-2); margin-top: 6px; }
+.grammar .seg .e code { font-size: 12px; }
+.dot { align-self: center; font-family: var(--mono); font-size: 28px; color: var(--ink-3); }
+
+.ex { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 18px 0; }
+.ex .need { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; min-width: 0; }
+.ex .need .q { font-weight: 600; margin-bottom: 8px; }
+.ex .need .q small { color: var(--ink-3); font-weight: 500; font-size: 13px; margin-left: 8px; }
+.ex .row { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; font-size: 14px; padding: 3px 0; align-items: baseline; }
+.ex .row .tok { word-break: break-word; }
+.ex .row .tok em { font-style: normal; background: var(--mid-bg); color: var(--mid-ink); padding: 0 3px; border-radius: 3px; }
+@media (max-width: 520px) { .ex .row { grid-template-columns: 1fr; } }
+.cheat { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+@media (max-width: 760px) { .cheat { grid-template-columns: 1fr; } }
+.cheat .group { margin: 10px 0 0; }
+.cheat .group b { display: block; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); margin-bottom: 4px; }
+.cheat .group .tok { display: inline-block; background: var(--surface-2); padding: 2px 7px; border-radius: 5px; margin: 2px 4px 2px 0; font-size: 12.5px; }
+.score th, .score td { padding: 10px 10px; }
+.score td:first-child { white-space: nowrap; }
+ul.plain { padding-left: 20px; } ul.plain li { margin: 6px 0; }
+.foot { font-size: 13px; color: var(--ink-3); margin-top: 40px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('tn-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+  } catch (e) {}
+})();
+</script>
+<div id="tip"></div>
+<div class="wrap">
+
+<header>
+  <div class="theme-row">
+    <div class="theme-toggle" role="group" aria-label="Color theme">
+      <button type="button" data-set-theme="system" aria-pressed="true">System</button>
+      <button type="button" data-set-theme="light" aria-pressed="false">Light</button>
+      <button type="button" data-set-theme="dark" aria-pressed="false">Dark</button>
+    </div>
+  </div>
+  <div class="eyebrow">Benchmark case study · second edition</div>
+  <h1>Token naming instinct: what happens when you ask an AI to name your design tokens</h1>
+  <p class="lede prose">We gave five models the same 25 design briefs with no examples, no files and no memory, and asked each one to name 500 things. This report shows what you would actually get back, which names you can trust, and which decisions you still have to make yourself.</p>
+  <div class="meta">
+    <span><b>Claude Opus 5.5</b></span><span><b>GPT-5.6 Sol</b></span><span><b>Claude Fable 5.1</b></span><span><b>Grok 4.7</b></span><span><b>Muse Spark 1.3</b></span>
+    <span><b>125</b> blind runs</span><span><b>2,500</b> names</span><span>13 Oct 2026</span>
+  </div>
+  <nav class="toc">
+    <a href="#summary">Short answer</a>
+    <a href="#sample">What you'd get</a>
+    <a href="#shape">How a name is built</a>
+    <a href="#trust">What to leave to the AI</a>
+    <a href="#why">Why names differ</a>
+    <a href="#brief">Does the brief matter</a>
+    <a href="#twice">Same names twice?</a>
+    <a href="#which">Which model</a>
+    <a href="#practice">In practice</a>
+    <a href="#needs">All 100 tokens</a>
+    <a href="#method">Method</a>
+  </nav>
+</header>
+
+<section id="summary">
+  <div class="section-head"><div class="num">01</div><div>
+  <h2>The short answer</h2>
+  <p class="prose">AI token names are readable and well-formed. They are not stable, and they are not the same across vendors. You can hand the AI the easy half of the job. You still own the hard half.</p>
+  </div></div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="v">1 in 2</div><div class="l">tokens get the same name from at least three of the five models. One in eight is unanimous.</div></div>
+    <div class="kpi"><div class="v">46%</div><div class="l">of the time the same model gives a different name when you reorder the brief.</div></div>
+    <div class="kpi"><div class="v">3 words</div><div class="l">is the typical name, built as category · thing · variant · state. All five models follow this shape.</div></div>
+    <div class="kpi"><div class="v">34%</div><div class="l">of typography names reach a majority. It is the one area no model names reliably.</div></div>
+  </div>
+
+  <h3>When this matters</h3>
+  <p class="prose">The main use is building a design system for a project that agents will work on, where the aim is to minimise drift: the same thing getting a different name across sessions, pages and models. Drift shows up in three forms. An agent built a page and invented token names as it went, and you need to know which of those names are standard and which are its habit. Agents from more than one vendor read the same system, and their guesses need to land on real tokens. Or you are writing the brief or the instructions for an agent and have to decide what to spell out and what to leave to it. Each takeaway below names the situation it applies to.</p>
+
+  <ol class="takeaways">
+    <li><b>An agent built a page and named the tokens itself.</b><span>Keep the color-role names it chose. <code>color.text.primary</code>, <code>color.action.primary.hover</code>, <code>color.brand.primary</code> and <code>color.link.hover</code> came back identical from all five models, so a different agent later will find them. Replace its typography, spacing and shadow names with your own. Those are the ones it will not repeat next time.</span></li>
+    <li><b>You are writing a design system that agents will read.</b><span>Write the type scale, the spacing steps and the shadows in full. "A middle spacing step" came back as <code>space-md</code>, <code>spacing.400</code>, <code>space.5</code> and <code>space.500</code>. Use the standard color-role names and you can skip explaining them. Pick <code>space</code> or <code>spacing</code>, <code>shadow</code> or <code>elevation</code>, <code>typography</code> or <code>font</code>, and list the other as an alias so another vendor's agent still resolves.</span></li>
+    <li><b>You are writing the brief or the instructions for an agent.</b><span>Describe the product and list its parts: cards, tables, product grid, cart. Do not say "a design system". The two concrete briefs scored about one and a half times the agreement of the generic one, and the generic one even changed which syntax the models wrote in.</span></li>
+    <li><b>You need the same names across sessions, pages or models.</b><span>Generate once, edit, save the file, and point every later task at that file. Reordering a brief changed nearly half of a model's names. Asking a second model changes more.</span></li>
+    <li><b>You are choosing which model drafts the names.</b><span>If agents from several vendors will read the result, draft with Opus or Fable. Their names overlap most with everyone else's. If you want one rigid grammar, GPT is the most consistent, especially on typography.</span></li>
+  </ol>
+</section>
+
+<section id="sample">
+  <div class="section-head"><div class="num">02</div><div>
+  <h2>What you would actually get</h2>
+  <p class="prose">This is one brief, exactly as returned by each model. The product is an analytics dashboard with KPI cards, charts, tables and filters. Each model saw the same 20 lines and nothing else.</p>
+  </div></div>
+
+  <figure>
+    <div class="ft">Twenty names for a SaaS analytics dashboard</div>
+    <div class="fs">Raw output from the first prompt variant. Grey names are the odd one out when the other three agree.</div>
+    <div class="scrollx"><table class="hero-table">
+      <thead><tr><th>Token</th><th class="tok c-opus">Opus 5.5</th><th class="tok c-gpt">GPT-5.6</th><th class="tok c-fable">Fable 5.1</th><th class="tok c-grok">Grok 4.7</th><th class="tok c-muse">Muse 1.3</th></tr></thead>
+      <tbody>
+        <tr class="grp maj"><td class="need">Brand color</td><td class="tok">color-brand-primary</td><td class="tok">color.brand.primary</td><td class="tok">color.brand.primary</td><td class="tok odd">color.brand</td><td class="tok">color.brand.primary</td></tr>
+        <tr><td class="need">Lowest page background</td><td class="tok">color-surface-base</td><td class="tok">color.surface.page</td><td class="tok">color.background.base</td><td class="tok">color.background.canvas</td><td class="tok">color.background.page</td></tr>
+        <tr><td class="need">Raised panel background</td><td class="tok">color-surface-raised</td><td class="tok">color.surface.raised</td><td class="tok">color.background.raised</td><td class="tok">color.background.raised</td><td class="tok">color.background.panel-raised</td></tr>
+        <tr class="maj"><td class="need">Subtle divider</td><td class="tok">color-border-subtle</td><td class="tok">color.border.subtle</td><td class="tok">color.border.subtle</td><td class="tok odd">color.divider.subtle</td><td class="tok odd">color.border.divider-subtle</td></tr>
+        <tr class="grp all"><td class="need">Primary text</td><td class="tok">color-text-primary</td><td class="tok">color.text.primary</td><td class="tok">color.text.primary</td><td class="tok">color.text.primary</td><td class="tok">color.text.primary</td></tr>
+        <tr class="all"><td class="need">Supporting text</td><td class="tok">color-text-secondary</td><td class="tok">color.text.secondary</td><td class="tok">color.text.secondary</td><td class="tok">color.text.secondary</td><td class="tok">color.text.secondary</td></tr>
+        <tr class="maj"><td class="need">Primary action</td><td class="tok">color-action-primary-default</td><td class="tok">color.action.primary.default</td><td class="tok">color.action.primary.default</td><td class="tok odd">color.action.primary</td><td class="tok">color.action.primary.default</td></tr>
+        <tr class="all"><td class="need">Primary action, hovered</td><td class="tok">color-action-primary-hover</td><td class="tok">color.action.primary.hover</td><td class="tok">color.action.primary.hover</td><td class="tok">color.action.primary.hover</td><td class="tok">color.action.primary.hover</td></tr>
+        <tr class="grp maj"><td class="need">Page heading</td><td class="tok odd">font-heading-page</td><td class="tok">typography.heading.page</td><td class="tok">typography.heading.page</td><td class="tok">typography.heading.page</td><td class="tok odd">type.heading.page</td></tr>
+        <tr class="maj"><td class="need">Section heading</td><td class="tok odd">font-heading-section</td><td class="tok">typography.heading.section</td><td class="tok">typography.heading.section</td><td class="tok">typography.heading.section</td><td class="tok odd">type.heading.section</td></tr>
+        <tr><td class="need">Body copy</td><td class="tok">font-body-default</td><td class="tok">typography.body.default</td><td class="tok">typography.body.default</td><td class="tok">typography.body</td><td class="tok">type.body.default</td></tr>
+        <tr><td class="need">Compact helper copy</td><td class="tok">font-body-caption</td><td class="tok">typography.body.compact</td><td class="tok">typography.body.caption</td><td class="tok">typography.meta</td><td class="tok">type.meta.helper</td></tr>
+        <tr class="grp maj"><td class="need">Smallest gap</td><td class="tok">space-gap-xs</td><td class="tok">space.gap.xs</td><td class="tok">space.gap.xs</td><td class="tok odd">space.xs</td><td class="tok odd">space.gap.min</td></tr>
+        <tr class="maj"><td class="need">Standard group gap</td><td class="tok">space-gap-md</td><td class="tok">space.gap.md</td><td class="tok">space.gap.md</td><td class="tok odd">space.group</td><td class="tok odd">space.gap.group</td></tr>
+        <tr class="maj"><td class="need">Control corner radius</td><td class="tok">radius-control</td><td class="tok">radius.control</td><td class="tok">radius.control</td><td class="tok">radius.control</td><td class="tok odd">radius.control.default</td></tr>
+        <tr><td class="need">Floating panel elevation</td><td class="tok">shadow-elevation-floating</td><td class="tok">shadow.panel.floating</td><td class="tok">elevation.overlay</td><td class="tok">elevation.floating</td><td class="tok">shadow.panel.floating</td></tr>
+        <tr class="grp"><td class="need">Primary button background</td><td class="tok">button-primary-color-background</td><td class="tok">component.button.primary.background</td><td class="tok">button.primary.background</td><td class="tok">color.button.primary.background</td><td class="tok">component.button-primary.background</td></tr>
+        <tr><td class="need">Primary button label</td><td class="tok">button-primary-color-label</td><td class="tok">component.button.primary.label</td><td class="tok">button.primary.text</td><td class="tok">color.button.primary.label</td><td class="tok">component.button-primary.label</td></tr>
+        <tr><td class="need">KPI card padding</td><td class="tok">kpi-card-space-padding</td><td class="tok">component.card.kpi.padding</td><td class="tok">card.kpi.padding</td><td class="tok">card.kpi.padding</td><td class="tok">component.kpi-card.padding</td></tr>
+        <tr class="all"><td class="need">Main content max width</td><td class="tok">layout-content-max-width</td><td class="tok">layout.content.max-width</td><td class="tok">layout.content.max-width</td><td class="tok">layout.content.max-width</td><td class="tok">layout.content.max-width</td></tr>
+      </tbody>
+    </table></div>
+    <figcaption>Read the table top to bottom and the pattern is visible without any statistics. Colors and the text roles are the same across models. Headings mostly agree. Spacing, shadows and the button tokens are where each model goes its own way. Opus chose kebab-case for this run and Muse opens its text roles with <span class="tok">type</span>; the words underneath are the same as everyone else's.</figcaption>
+  </figure>
+</section>
+
+<section id="shape">
+  <div class="section-head"><div class="num">03</div><div>
+  <h2>How an AI builds a token name</h2>
+  <p class="prose">All five models write the same kind of name. It reads like a short sentence, from general to specific, and the state always comes last. If you can read one of these, you can read all of them.</p>
+  </div></div>
+
+  <div class="grammar">
+    <div class="seg"><div class="w">color</div><div class="r">1 · Category</div><div class="e">What kind of value. Eight words cover 87% of all names: <code>color</code>, <code>typography</code>, <code>space</code>, <code>radius</code>, <code>spacing</code>, <code>breakpoint</code>, <code>type</code>, <code>elevation</code>.</div></div>
+    <div class="dot">·</div>
+    <div class="seg"><div class="w">action</div><div class="r">2 · What it is for</div><div class="e">The job or the object: <code>text</code>, <code>action</code>, <code>link</code>, <code>border</code>, <code>heading</code>, <code>button</code>, <code>card</code>.</div></div>
+    <div class="dot">·</div>
+    <div class="seg"><div class="w">primary</div><div class="r">3 · Which one</div><div class="e">Rank or variant: <code>primary</code>, <code>secondary</code>, <code>subtle</code>, <code>page</code>, <code>section</code>, <code>xs</code>, <code>md</code>.</div></div>
+    <div class="dot">·</div>
+    <div class="seg"><div class="w">hover</div><div class="r">4 · State (optional)</div><div class="e">Always last, in 93% of names that have one: <code>hover</code>, <code>disabled</code>, <code>default</code>, <code>active</code>, <code>invalid</code>.</div></div>
+  </div>
+
+  <div class="two">
+    <figure>
+      <div class="ft">The first word is almost always one of eight</div>
+      <div class="fs">How 2,500 names begin</div>
+      <svg id="roots" viewBox="0 0 520 320"></svg>
+      <figcaption>Nearly half of all names start with <span class="tok">color</span>. The tail (<span class="tok">button</span>, <span class="tok">size</span>, <span class="tok">layout</span>, <span class="tok">card</span>) is where component names start with the component instead of a category.</figcaption>
+    </figure>
+    <figure>
+      <div class="ft">How long the names are</div>
+      <div class="fs">Words per name, all 2,500 names</div>
+      <svg id="seghist" viewBox="0 0 520 320"></svg>
+      <figcaption>Three words is the norm. Two-word names are primitives (<span class="tok">radius.control</span>). Five and six words are component tokens with a state (<span class="tok">color.button.primary.background.hover</span>).</figcaption>
+    </figure>
+  </div>
+
+  <div class="insight"><b>The one place the sentence structure splits: components</b>Two models put the component first (<span class="tok">button.primary.background</span>), three put the property first (<span class="tok">color.button.primary.background</span>). Opus and Fable lead with the component in about two thirds of button names. GPT, Grok and Muse lead with the property, and Grok and Muse never once put <span class="tok">button</span> first. If your system has a rule for this, say it in the brief.</div>
+</section>
+
+<section id="trust">
+  <div class="section-head"><div class="num">04</div><div>
+  <h2>Which names can you leave to the AI?</h2>
+  <p class="prose">The clearest result in the study. Agreement depends on the kind of token far more than on the model. Color roles are shared language. Scales are not.</p>
+  </div></div>
+
+  <figure>
+    <div class="ft">Chance that most models pick the same name, by kind of token</div>
+    <div class="fs">100 tokens per kind. "Most" means three or more of the five models.</div>
+    <div class="scrollx"><svg id="roles" viewBox="0 0 1000 310"></svg></div>
+    <figcaption>A semantic color role has a 75% chance of coming back with a name most models would also choose. A typography role has a 34% chance, and even then the models mostly agree only on the easy ones like page and section headings.</figcaption>
+  </figure>
+
+  <div class="cheat">
+    <div class="card ok">
+      <h4>Safe to leave to the AI</h4>
+      <p>All five models produced these names independently. Any model will understand them, and you will too.</p>
+      <div class="group"><b>Text and links</b><span class="tok">color.text.primary</span><span class="tok">color.text.secondary</span><span class="tok">color.text.strong</span><span class="tok">color.link.default</span><span class="tok">color.link.hover</span></div>
+      <div class="group"><b>Actions</b><span class="tok">color.action.primary</span><span class="tok">color.action.primary.default</span><span class="tok">color.action.primary.hover</span><span class="tok">color.action.purchase.default</span><span class="tok">color.action.purchase.disabled</span></div>
+      <div class="group"><b>Brand, neutrals and surfaces</b><span class="tok">color.brand.primary</span><span class="tok">color.neutral.50</span><span class="tok">color.neutral.500</span><span class="tok">color.neutral.950</span><span class="tok">color.neutral.strongest</span><span class="tok">color.surface.page</span><span class="tok">color.background.page</span><span class="tok">color.surface.product.card</span><span class="tok">color.selection.background</span><span class="tok">color.notice.urgent</span><span class="tok">color.badge.sale.background</span></div>
+      <div class="group"><b>Shape and layout</b><span class="tok">radius.control</span><span class="tok">radius.product.card</span><span class="tok">layout.content.max.width</span></div>
+      <div class="group"><b>Text roles</b><span class="tok">typography.heading.page</span><span class="tok">typography.heading.section</span><span class="tok">typography.body.default</span><span class="tok">typography.product.description</span><span class="tok">typography.product.detail.title</span></div>
+    </div>
+    <div class="card warn">
+      <h4>Spell these out yourself</h4>
+      <p>No model agreed with the others here, and most did not agree with themselves across runs.</p>
+      <div class="group"><b>Type sizes and small text</b><span class="tok">display / xl / large / largest</span><span class="tok">caption / meta / compact / supporting / small / xs</span><span class="tok">body.md / body.default / paragraph</span></div>
+      <div class="group"><b>Spacing steps</b><span class="tok">space.1 / space.xs / space.50 / space.100</span><span class="tok">space-md / space.4 / space.5 / space.500</span><span class="tok">space.gap.* vs space.*</span></div>
+      <div class="group"><b>Depth</b><span class="tok">shadow.* vs elevation.*</span><span class="tok">overlay / floating / panel</span></div>
+      <div class="group"><b>Status colors</b><span class="tok">success / feedback.success / status.success</span><span class="tok">danger / destructive / error</span><span class="tok">in.stock / inventory.available / available</span></div>
+      <div class="group"><b>Component tokens</b><span class="tok">button.primary.* vs color.button.primary.*</span><span class="tok">card.padding vs space.card.padding</span><span class="tok">focus.ring vs focus.indicator</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="section-head"><div class="num">05</div><div>
+  <h2>Why the names differ: usually one word</h2>
+  <p class="prose">When two models disagree, they rarely disagree about the structure. Two thirds of the mismatched pairs share the first word and at least half of the words. The difference is a single synonym or a single modifier. Here are three tokens, with every answer each model gave across its five runs.</p>
+  </div></div>
+
+  <div class="ex">
+    <div class="need"><div class="q">The supporting-copy color <small>marketing brief</small></div>
+      <div class="row"><span class="model m-opus">Opus 5.5</span><span class="tok">color.text.<em>muted</em> ×5</span></div>
+      <div class="row"><span class="model m-gpt">GPT-5.6</span><span class="tok">color.text.<em>secondary</em> ×4 · color.text.<em>supporting</em> ×1</span></div>
+      <div class="row"><span class="model m-fable">Fable 5.1</span><span class="tok">color.text.<em>muted</em> ×3 · color.text.<em>supporting</em> · color.text.<em>secondary</em></span></div>
+      <div class="row"><span class="model m-grok">Grok 4.7</span><span class="tok">color.text.<em>supporting</em> ×5</span></div>
+      <div class="row"><span class="model m-muse">Muse 1.3</span><span class="tok">color.text.<em>supporting</em> ×2 · color.text.<em>support</em> · color.text.<em>muted</em> · color.text.<em>secondary</em></span></div>
+    </div>
+    <div class="need"><div class="q">The elevation used by floating panels <small>dashboard brief</small></div>
+      <div class="row"><span class="model m-opus">Opus 5.5</span><span class="tok"><em>elevation</em>.overlay ×2 · <em>elevation</em>.floating · <em>shadow</em>-floating · <em>shadow</em>-elevation-floating</span></div>
+      <div class="row"><span class="model m-gpt">GPT-5.6</span><span class="tok"><em>shadow</em>.panel.floating ×5</span></div>
+      <div class="row"><span class="model m-fable">Fable 5.1</span><span class="tok"><em>elevation</em>.overlay ×2 · <em>elevation</em>.floating · <em>shadow</em>-overlay · <em>shadow</em>-floating</span></div>
+      <div class="row"><span class="model m-grok">Grok 4.7</span><span class="tok"><em>elevation</em>.floating ×4 · <em>elevation</em>.panel.floating</span></div>
+      <div class="row"><span class="model m-muse">Muse 1.3</span><span class="tok"><em>shadow</em>.panel.floating ×2 · <em>shadow</em>.panel · <em>elevation</em>.panel.floating · <em>elevation</em>.panel.default</span></div>
+    </div>
+    <div class="need"><div class="q">A middle spacing step <small>generic brief</small></div>
+      <div class="row"><span class="model m-opus">Opus 5.5</span><span class="tok">space-<em>md</em> ×2 · space-<em>5</em> · space.<em>5</em> · space.<em>4</em></span></div>
+      <div class="row"><span class="model m-gpt">GPT-5.6</span><span class="tok">spacing.<em>400</em> · spacing.<em>5</em> · spacing.step.<em>medium</em> · space.<em>4</em> · space.<em>6</em></span></div>
+      <div class="row"><span class="model m-fable">Fable 5.1</span><span class="tok">--space-<em>md</em> ×3 · --space-<em>m</em> · --space-<em>5</em></span></div>
+      <div class="row"><span class="model m-grok">Grok 4.7</span><span class="tok">space.<em>md</em> ×2 · space.<em>500</em> ×2 · space.<em>middle</em></span></div>
+      <div class="row"><span class="model m-muse">Muse 1.3</span><span class="tok">space.<em>4</em> ×4 · spacing.<em>md</em></span></div>
+    </div>
+  </div>
+
+  <figure>
+    <div class="ft">Three words to decide before you start</div>
+    <div class="fs">How often each model used each word, out of its 500 names</div>
+    <div class="scrollx"><svg id="forks-svg" viewBox="0 0 1000 290"></svg></div>
+    <figcaption>These are habits, not choices. GPT and Muse say <span class="tok">spacing</span>; the other three never do. Grok says <span class="tok">elevation</span> and never <span class="tok">shadow</span>. GPT says <span class="tok">typography</span> for every text role; Muse opens almost half of its text roles with <span class="tok">type</span>; the others mix in <span class="tok">font</span> and <span class="tok">text</span>. Whatever you pick, name the other one as an alias so an agent's guess still resolves.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="ft">Four words for quiet text, and one for the page behind it</div>
+    <div class="fs">Names containing each word, per model</div>
+    <div class="scrollx"><svg id="forks2-svg" viewBox="0 0 1000 290"></svg></div>
+    <figcaption><span class="tok">subtle</span> is the shared word for borders and dividers. For de-emphasized text the models split between <span class="tok">secondary</span>, <span class="tok">muted</span> and <span class="tok">supporting</span>. For the page itself, <span class="tok">background</span> beats <span class="tok">surface</span> for every model, and the two Claude models are the ones that abbreviate to <span class="tok">bg</span>.</figcaption>
+  </figure>
+</section>
+
+<section id="brief">
+  <div class="section-head"><div class="num">06</div><div>
+  <h2>Does the brief matter?</h2>
+  <p class="prose">Yes, more than the model does. A concrete product gives the AI nouns it can reuse: product, cart, article, KPI. A generic "design system" brief gives it nothing to hold on to, so it falls back on its own habits, and the habits differ.</p>
+  </div></div>
+
+  <div class="two">
+    <figure>
+      <div class="ft">Agreement by brief</div>
+      <div class="fs">Share of 100 tokens per brief where three or more of the five models chose the same name</div>
+      <svg id="scen" viewBox="0 0 520 300"></svg>
+      <figcaption>The dashboard and the store scored about one and a half times as high as the marketing site and the generic system. The marketing brief uses softer language ("restrained", "high-impact", "contrasting"), and the models each translated it differently.</figcaption>
+    </figure>
+    <figure>
+      <div class="ft">The same thing, five briefs: "the page background"</div>
+      <div class="fs">Most common name per model for the base page background in each brief</div>
+      <div class="scrollx"><table class="hero-table" style="min-width:640px">
+        <thead><tr><th>Brief</th><th class="tok c-opus">Opus</th><th class="tok c-gpt">GPT</th><th class="tok c-fable">Fable</th><th class="tok c-grok">Grok</th><th class="tok c-muse">Muse</th></tr></thead>
+        <tbody>
+          <tr><td>Dashboard</td><td class="tok">color.surface.base</td><td class="tok">color.surface.page</td><td class="tok">color.background.base</td><td class="tok">color.background.canvas</td><td class="tok">color.background.base</td></tr>
+          <tr><td>Editorial</td><td class="tok">color.background.page</td><td class="tok">color.page.reading.background</td><td class="tok">color.surface.page</td><td class="tok">color.background.page</td><td class="tok">color.background.reading</td></tr>
+          <tr class="maj"><td class="need">Store</td><td class="tok">color.background.page</td><td class="tok odd">color.background.storefront</td><td class="tok">color.background.page</td><td class="tok">color.background.page</td><td class="tok odd">color.surface.page</td></tr>
+          <tr><td>Marketing</td><td class="tok">color.bg.page</td><td class="tok">color.background.page</td><td class="tok">color.background.base</td><td class="tok">color.background.page</td><td class="tok">color.background.base</td></tr>
+          <tr class="all"><td class="need">Generic</td><td class="tok">color.surface.page</td><td class="tok">color.surface.page</td><td class="tok">color.surface.page</td><td class="tok">color.surface.page</td><td class="tok">color.surface.page</td></tr>
+        </tbody>
+      </table></div>
+      <figcaption>Same concept, nine different names across five briefs. The one brief where all five agreed is the generic one, whose line reads "the default page surface": the word in the brief became the word in the name. The editorial brief's word "reading" and the store brief's "storefront" each pulled a model into a one-off name.</figcaption>
+    </figure>
+  </div>
+
+  <figure>
+    <div class="ft">Where the AI is reliable, and where it is not</div>
+    <div class="fs">Share of tokens where three or more of the five models chose the same name, by kind of token and brief (20 tokens per cell)</div>
+    <div class="scrollx"><svg id="rolescen" viewBox="0 0 1000 330"></svg></div>
+    <figcaption>Two cells stand out. Color roles in the dashboard brief: 100%, every name interchangeable across vendors. Typography in the generic brief: 0%, not a single type role got three models to agree. The brief also changed the syntax: Fable wrote CSS custom properties (<span class="tok">--space-md</span>) in all five generic runs and in none of the editorial runs. Opus switched to kebab-case in four of five marketing runs.</figcaption>
+  </figure>
+
+  <div class="insight"><b>What to put in the brief</b>Name the product and list its parts (cards, tables, product grid, cart drawer). Use plain nouns, not adjectives. If you want a fixed syntax, show one example name. The models do not need a rationale; they need something concrete to attach the name to.</div>
+</section>
+
+<section id="twice">
+  <div class="section-head"><div class="num">07</div><div>
+  <h2>Will you get the same names twice?</h2>
+  <p class="prose">No. Each model saw every brief five times with the sections in a different order, and nothing else changed. On average a model repeated its own name 54% of the time. For typography, Opus repeated itself only 24% of the time, and Muse repeated any of its names only 46% of the time.</p>
+  </div></div>
+
+  <figure>
+    <div class="ft">How often a model repeats its own name</div>
+    <div class="fs">Same name for the same token across five reorderings of the brief, by kind of token</div>
+    <div class="scrollx"><svg id="selfcons" viewBox="0 0 1000 300"></svg></div>
+    <figcaption>Every model is steady on colors and shaky on typography. GPT is the exception: it has one fixed type grammar (<span class="tok">typography.</span> plus role) and repeats it, which makes it the most predictable model for type even though its names are not the ones the other vendors pick. Muse is the least steady model everywhere except typography, and weakest on spacing and depth.</figcaption>
+  </figure>
+
+  <div class="insight"><b>What this means in practice</b>Treat generated names as a first draft. Run the AI once, edit the result, commit it to a file, and point every later task at that file. Asking a model to "name the tokens again" for a new page will give you a second, slightly different vocabulary.</div>
+</section>
+
+<section id="which">
+  <div class="section-head"><div class="num">08</div><div>
+  <h2>Which model should name your tokens?</h2>
+  <p class="prose">None of them is bad at this. They differ in style and in how much their names overlap with everyone else's, which matters if more than one vendor's agent will read your system.</p>
+  </div></div>
+
+  <figure>
+    <div class="ft">Scorecard</div>
+    <div class="scrollx"><table class="score" style="min-width:720px">
+      <thead><tr><th>Model</th><th>Writes</th><th class="n">Agrees with other vendors</th><th class="n">Repeats itself</th><th class="n">Words per name</th><th>Habit to know about</th></tr></thead>
+      <tbody>
+        <tr><td><span class="model m-opus">Claude Opus 5.5</span></td><td>dot-path, or kebab-case for marketing and generic briefs</td><td class="n">37%</td><td class="n">57%</td><td class="n">3.3</td><td>Changes syntax by brief but keeps the same words. Least often the odd one out.</td></tr>
+        <tr><td><span class="model m-fable">Claude Fable 5.1</span></td><td>dot-path, kebab-case, or <span class="tok">--css-variables</span></td><td class="n">37%</td><td class="n">55%</td><td class="n">3.1</td><td>Thinks in CSS. 140 of 500 names were custom properties. Shortest names. Closest to Opus.</td></tr>
+        <tr><td><span class="model m-gpt">GPT-5.6 Sol</span></td><td>always dot-path</td><td class="n">32%</td><td class="n">56%</td><td class="n">3.4</td><td>One grammar for everything. Says <span class="tok">spacing</span>, <span class="tok">typography.*</span>, property-first components. Four runs added commentary after the JSON.</td></tr>
+        <tr><td><span class="model m-grok">Grok 4.7</span></td><td>always dot-path</td><td class="n">32%</td><td class="n">54%</td><td class="n">3.1</td><td>Looks like GPT, agrees with it little. Says <span class="tok">elevation</span>, never <span class="tok">shadow</span>. Never puts the component first.</td></tr>
+        <tr><td><span class="model m-muse">Muse Spark 1.3</span></td><td>always dot-path</td><td class="n">28%</td><td class="n">46%</td><td class="n">3.3</td><td>Broadest vocabulary (238 distinct names) and the least steady. Opens text roles with <span class="tok">type</span>, uses <span class="tok">component.</span> more than anyone, says both <span class="tok">space</span> and <span class="tok">spacing</span>.</td></tr>
+      </tbody>
+    </table></div>
+    <figcaption>"Agrees with other vendors" is the mean exact-name match against the other four models. "Repeats itself" is the same-name rate across the five reorderings.</figcaption>
+  </figure>
+
+  <div class="two">
+    <figure>
+      <div class="ft">Who thinks alike</div>
+      <div class="fs">Percent of 500 tokens where two models produced the same name</div>
+      <svg id="pairwise" viewBox="0 0 520 480"></svg>
+      <figcaption>The two Claude models are the only strong pair. GPT, Grok and Muse all write pure dot-path and agree the least with each other and with everyone else. Syntax and vocabulary are separate things.</figcaption>
+    </figure>
+    <div class="card">
+      <h4>How to choose</h4>
+      <ul>
+        <li><b>Agents from several vendors will read the system:</b> use Opus or Fable to draft. Their names overlap most with everyone else's.</li>
+        <li><b>You want one rigid grammar:</b> GPT. It is the most consistent on typography and never changes syntax.</li>
+        <li><b>You write CSS directly:</b> Fable already names things as <span class="tok">--custom-properties</span>; keep a CSS file as the canonical surface.</li>
+        <li><b>Whatever you pick:</b> decide <span class="tok">space</span>/<span class="tok">spacing</span>, <span class="tok">shadow</span>/<span class="tok">elevation</span> and component-first or property-first up front. These are the three places a different vendor's agent will guess wrong.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="practice">
+  <div class="section-head"><div class="num">09</div><div>
+  <h2>How to apply this in an agent workflow</h2>
+  <p class="prose">For a project where agents build pages against one design system, the aim is to stop names drifting across sessions, pages and models. The findings turn into six habits, in the order a project runs. None of them needs a tool. The first one is worth the most: a thirty-line file removes most of the drift the study found.</p>
+  </div></div>
+
+  <ol class="takeaways">
+    <li><b>Start the project with the file the agent cannot guess.</b><span>Put the type scale, the spacing steps and the shadows in one short file the agent reads first, before the first session. These are the tokens that drift most: no model names them the same way twice. Decide the three fork words now (<code>space</code> or <code>spacing</code>, <code>shadow</code> or <code>elevation</code>, <code>typography</code> or <code>font</code>), write the one you use, and list the other as an alias. Skip documenting colour roles if they use the standard names; every model produced <code>color.text.primary</code>, <code>color.action.primary.hover</code>, <code>color.brand.primary</code> and <code>color.link.hover</code> without instruction.</span></li>
+    <li><b>When you brief the agent: name the product, not the system.</b><span>Describe the actual thing ("a storefront with product cards, a cart drawer and a sale badge") and list the parts it will touch. Concrete nouns raised agreement by half compared with "a design system", and the agent reuses those nouns in its token names, which makes them readable to you and to the next agent. Do not say "design system" on its own; that brief produced the worst names and changed the syntax some models wrote in.</span></li>
+    <li><b>Generate names once, at the start, and treat the output as a draft.</b><span>Keep its colour-role names. Replace its typography, spacing and shadow names with yours from step 1; those are the ones it will not repeat next time. Save the result to a file and point every later task at that file. Do not ask the agent to name the tokens again for a new page: two thirds of names change when the same model is asked twice, and that is where drift begins.</span></li>
+    <li><b>When reviewing agent-written CSS: check the three drift points.</b><span>Component tokens: <code>button.primary.background</code> or <code>color.button.primary.background</code>? Two models do one, three do the other, so pick a rule and search for the other. State words: they will be last (<code>.hover</code>, <code>.disabled</code>); if your system puts state elsewhere, every agent will get it wrong, so move it. Fork words: <code>spacing</code> where you use <code>space</code>, <code>elevation</code> where you use <code>shadow</code>. These are the most common wrong guesses and the easiest to catch with a search.</span></li>
+    <li><b>When choosing which model drafts: match it to who will work on the project.</b><span>Agents from several vendors will work on it: draft with Opus or Fable, whose names overlap most with everyone else's. One model will do all the work: GPT drifts least on typography, the only model with a fixed grammar there. You write CSS by hand and want the agent to match: Fable already names tokens as <code>--custom-properties</code>, so keep the CSS file as the source of truth.</span></li>
+    <li><b>When you add a design-system file for agents: write it as aliases, not prose.</b><span>The mismatches are one word deep, so a short alias table resolves more of them than any explanation. An agent that guesses <code>color.text.muted</code> then lands on a real token instead of inventing one.</span></li>
+  </ol>
+
+  <figure>
+    <div class="ft">An alias table that catches the common wrong guesses</div>
+    <pre style="margin:0;font-family:var(--mono);font-size:13px;line-height:1.6;background:var(--surface-2);padding:14px 16px;border-radius:8px;overflow-x:auto">space = spacing
+shadow = elevation
+typography = font = type = text
+color.text.secondary = color.text.muted = color.text.supporting
+color.surface.page = color.background.page
+color.action.primary = color.action.primary.default
+radius.control = radius.control.default</pre>
+    <figcaption>Each line maps the words the five models used for the same thing onto one token. Everything on a line came from this study's data; add your own as you find them.</figcaption>
+  </figure>
+
+  <div class="insight"><b>The one-line version</b>Let the agent name what every model already agrees on, write down what no model agrees on, say what the product is, and never generate twice. That is what keeps a project's token names from drifting.</div>
+</section>
+
+<section id="needs">
+  <div class="section-head"><div class="num">10</div><div>
+  <h2>Every token we asked for, and whether the models agreed on its name</h2>
+  <p class="prose">One cell per token. Dark means three or more of the five models agreed on its name in most runs; pale means they rarely did. Hover a cell to see what we asked for and what each model called it.</p>
+  </div></div>
+
+  <figure>
+    <div class="ft">100 tokens, five briefs, five models</div>
+    <div class="fs">Rows are the five briefs. Columns are the 20 tokens in each brief, four per kind of token.</div>
+    <div class="scrollx"><svg id="needgrid" viewBox="0 0 1000 300"></svg></div>
+    <figcaption>Color roles (second block of columns) are dark in every brief. Typography (third block) is pale in every brief. The generic design-system brief (bottom row) is pale almost everywhere.</figcaption>
+  </figure>
+</section>
+
+<section id="method">
+  <div class="section-head"><div class="num">11</div><div>
+  <h2>Method and limits</h2>
+  </div></div>
+  <div class="prose">
+    <h3>Design</h3>
+    <p>Five briefs: a SaaS analytics dashboard, an editorial site, an ecommerce store, a professional-services marketing site, and a generic website design system. Each brief lists 20 tokens to name, in five groups of four: color primitives, color roles, typography, spacing and shape, and component tokens. Five versions of each brief rotate the group order so every group sits in every position once. Each of the 25 prompts went once to each of the five models in a fresh Cursor subagent with no tools, no files and no memory. Models were asked for JSON only and no explanation, so the instruction itself would not change the naming behaviour. Model identities were hidden during review.</p>
+    <h3>Counting agreement</h3>
+    <p>Raw names are kept as returned. To compare across syntaxes, names are split on dots, dashes, underscores and camelCase, lowercased, and the <span class="tok">--</span> prefix is dropped. Synonyms are never merged: <span class="tok">spacing</span> and <span class="tok">space</span> count as different words. "Agree" means the same words in the same order.</p>
+    <h3>Integrity</h3>
+    <ul class="plain">
+      <li>125 of 125 runs completed. Every transcript shows zero tool calls. The fifth model, Muse Spark 1.3, was added after the first four on the same frozen prompts; the earlier runs were not touched.</li>
+      <li>121 runs passed the strict JSON contract. The four failures were GPT runs that added commentary after valid JSON; the JSON was used unmodified and the failures are still counted as failures.</li>
+      <li>Reordering the brief had a small effect on agreement (46% to 55% majority by position) and no group of tokens was tied to one position, so the per-kind results are not an ordering artifact.</li>
+    </ul>
+    <h3>Limits</h3>
+    <ul class="plain">
+      <li>One sample per prompt per model at Cursor's default settings. Per-token figures rest on five comparisons per pair of models and are evidence, not estimates.</li>
+      <li>The 2,500 names come from 125 runs and are not independent observations.</li>
+      <li>Strict JSON may suppress some natural naming behaviour.</li>
+      <li>Results describe these five Cursor model configurations on 13 October 2026, not every model from each vendor.</li>
+    </ul>
+    <h3>Sources</h3>
+    <p>Every figure on this page comes from <span class="tok">data/analysis.json</span>, <span class="tok">data/concept-analysis.json</span>, <span class="tok">data/paired.json</span> and <span class="tok">data/normalized.json</span> in the benchmark project. The first edition of this report is <span class="tok">report/REPORT.md</span>.</p>
+  </div>
+  <p class="foot">Token Naming Instinct · second edition · 13 October 2026</p>
+</section>
+
+</div>
+
+<script>
+/* ---------- data (from data/*.json; see Method) ---------- */
+const M = ['opus','gpt','fable','grok','muse'];
+const LABEL = {opus:'Opus 5.5', gpt:'GPT-5.6', fable:'Fable 5.1', grok:'Grok 4.7', muse:'Muse 1.3'};
+const COL = {opus:'var(--opus)', gpt:'var(--gpt)', fable:'var(--fable)', grok:'var(--grok)', muse:'var(--muse)'};
+const pair = {'opus|gpt':38.0,'opus|fable':48.6,'opus|grok':34.2,'opus|muse':27.6,'gpt|fable':33.2,'gpt|grok':31.0,'gpt|muse':27.2,'fable|grok':36.2,'fable|muse':30.6,'grok|muse':28.0};
+const selfc = {opus:57.3,gpt:55.7,fable:55.2,grok:54.1,muse:45.6};
+const rootsAll = [["color", 1183], ["typography", 355], ["space", 226], ["radius", 125], ["spacing", 87], ["breakpoint", 75], ["type", 67], ["elevation", 66], ["shadow", 59], ["font", 45], ["button", 42], ["size", 34], ["other", 136]];
+const segAll = {"2": 261, "3": 1484, "4": 654, "5": 79, "6": 22};
+const roles = ['Primitives','Semantics','Typography','Foundations','Components'];
+const roleHuman = {Semantics:'Color roles (text, action, link, notice)',Primitives:'Color primitives (brand, neutral, border, surface)',Foundations:'Spacing, radius, elevation',Components:'Component tokens (button, card, breakpoint)',Typography:'Typography'};
+const roleTier = {"Primitives": [23, 70], "Semantics": [26, 75], "Typography": [7, 34], "Foundations": [5, 39], "Components": [2, 36]};
+const scen = ['S1','S2','S3','S4','S5'];
+const scenName = {S1:'SaaS dashboard',S2:'Editorial site',S3:'Ecommerce store',S4:'Marketing site',S5:'Generic design system'};
+const scenTier = {"S1": [28, 60], "S2": [3, 49], "S3": [21, 64], "S4": [5, 42], "S5": [6, 39]};
+const roleScen = {"S5": {"Primitives": 80, "Semantics": 60, "Typography": 0, "Foundations": 50, "Components": 5}, "S4": {"Primitives": 55, "Semantics": 70, "Typography": 20, "Foundations": 25, "Components": 40}, "S2": {"Primitives": 55, "Semantics": 85, "Typography": 35, "Foundations": 35, "Components": 35}, "S3": {"Primitives": 90, "Semantics": 60, "Typography": 60, "Foundations": 50, "Components": 60}, "S1": {"Primitives": 70, "Semantics": 100, "Typography": 55, "Foundations": 35, "Components": 40}};
+const selfRole = {"opus": {"Primitives": 72.0, "Semantics": 76.0, "Typography": 24.0, "Foundations": 54.5, "Components": 60.0}, "gpt": {"Primitives": 63.0, "Semantics": 63.5, "Typography": 56.0, "Foundations": 51.0, "Components": 45.0}, "fable": {"Primitives": 69.5, "Semantics": 72.5, "Typography": 43.0, "Foundations": 46.0, "Components": 45.0}, "grok": {"Primitives": 65.5, "Semantics": 71.0, "Typography": 28.0, "Foundations": 50.5, "Components": 55.5}, "muse": {"Primitives": 61.5, "Semantics": 61.0, "Typography": 37.5, "Foundations": 30.5, "Components": 37.5}};
+const forks = [{"t": "Gaps", "w": [["space", {"opus": 61, "gpt": 14, "fable": 56, "grok": 69, "muse": 28}], ["spacing", {"opus": 0, "gpt": 52, "fable": 0, "grok": 0, "muse": 35}]]}, {"t": "Depth", "w": [["shadow", {"opus": 15, "gpt": 19, "fable": 14, "grok": 0, "muse": 11}], ["elevation", {"opus": 11, "gpt": 6, "fable": 11, "grok": 25, "muse": 14}]]}, {"t": "Text roles (first word)", "w": [["typography", {"opus": 59, "gpt": 100, "fable": 72, "grok": 72, "muse": 52}], ["font", {"opus": 25, "gpt": 0, "fable": 16, "grok": 4, "muse": 0}], ["type", {"opus": 4, "gpt": 0, "fable": 4, "grok": 19, "muse": 40}], ["text", {"opus": 12, "gpt": 0, "fable": 8, "grok": 4, "muse": 4}]]}];
+const forks2 = [{"t": "Quiet text and lines", "w": [["subtle", {"opus": 15, "gpt": 13, "fable": 15, "grok": 6, "muse": 6}], ["secondary", {"opus": 5, "gpt": 8, "fable": 6, "grok": 5, "muse": 6}], ["supporting", {"opus": 0, "gpt": 6, "fable": 1, "grok": 9, "muse": 2}], ["muted", {"opus": 5, "gpt": 1, "fable": 3, "grok": 0, "muse": 1}]]}, {"t": "The page itself", "w": [["background", {"opus": 37, "gpt": 44, "fable": 43, "grok": 56, "muse": 55}], ["surface", {"opus": 22, "gpt": 26, "fable": 13, "grok": 12, "muse": 13}], ["bg", {"opus": 11, "gpt": 0, "fable": 14, "grok": 0, "muse": 1}], ["canvas", {"opus": 0, "gpt": 1, "fable": 0, "grok": 3, "muse": 0}]]}, {"t": "Rest state", "w": [["default", {"opus": 38, "gpt": 40, "fable": 33, "grok": 39, "muse": 36}], ["base", {"opus": 7, "gpt": 2, "fable": 9, "grok": 3, "muse": 12}]]}];
+const needs = [["S1-C01","Primitives",100,2,"color.brand.primary","color.brand.primary","color.brand.primary","color.brand","color.brand.primary"],["S1-C02","Primitives",0,7,"color.surface.base","color.surface.page","color.background.base","color.background.canvas","color.background.base"],["S1-C03","Primitives",80,4,"color.surface.raised","color.surface.raised","color.background.raised","color.background.raised","color.background.raised"],["S1-C04","Primitives",100,3,"color.border.subtle","color.border.subtle","color.border.subtle","color.divider.subtle","color.border.subtle"],["S1-C05","Semantics",100,1,"color.text.primary","color.text.primary","color.text.primary","color.text.primary","color.text.primary"],["S1-C06","Semantics",100,2,"color.text.secondary","color.text.secondary","color.text.secondary","color.text.secondary","color.text.secondary"],["S1-C07","Semantics",100,2,"color.action.primary.default","color.action.primary.default","color.action.primary.default","color.action.primary.default","color.action.primary.default"],["S1-C08","Semantics",100,1,"color.action.primary.hover","color.action.primary.hover","color.action.primary.hover","color.action.primary.hover","color.action.primary.hover"],["S1-C09","Typography",80,5,"typography.heading.page","typography.heading.page","typography.heading.page","typography.heading.page","typography.heading.page"],["S1-C10","Typography",80,4,"typography.heading.section","typography.heading.section","typography.heading.section","typography.heading.section","typography.heading.section"],["S1-C11","Typography",60,7,"typography.body.default","typography.body.default","typography.body.default","typography.body.default","typography.body.default"],["S1-C12","Typography",0,13,"typography.body.caption","typography.body.compact","typography.body.caption","typography.meta.compact","typography.body.metadata"],["S1-C13","Foundations",20,9,"space.gap.xs","space.gap.xs","space.xs","space.gap.minimum","spacing.gap.min"],["S1-C14","Foundations",20,12,"space.gap.md","space.gap.md","space.md","space.gap.group","spacing.md"],["S1-C15","Foundations",100,2,"radius.control","radius.control","radius.control","radius.control","radius.control.default"],["S1-C16","Foundations",0,9,"elevation.overlay","shadow.panel.floating","elevation.overlay","elevation.floating","shadow.panel.floating"],["S1-C17","Components",40,6,"button.primary.background","component.button.primary.background","component.button.primary.background","color.button.primary.background","color.button.primary.background"],["S1-C18","Components",20,8,"button.primary.label","component.button.primary.label","button.primary.text","color.button.primary.label","color.button.primary.foreground"],["S1-C19","Components",0,11,"kpi.card.padding","component.card.kpi.padding","component.kpi.card.padding","space.padding.kpi","spacing.padding.kpi.card"],["S1-C20","Components",100,6,"layout.content.max.width","layout.content.max.width","layout.content.max.width","layout.content.max.width","layout.content.max.width"],["S2-C01","Primitives",80,5,"color.brand.accent","color.brand.accent","color.brand.accent","color.accent","color.accent.brand"],["S2-C02","Primitives",20,9,"color.background.page","color.page.reading.background","color.surface.page","color.background.page","color.background.reading"],["S2-C03","Primitives",100,3,"color.ink.strongest","color.ink.strong","color.ink.strong","color.ink","color.ink.strongest"],["S2-C04","Primitives",20,8,"color.rule.subtle","color.border.subtle","color.border.subtle","color.rule","color.border.quiet"],["S2-C05","Semantics",60,5,"color.link.default","color.link.default","color.link.default","color.link","color.link.inline.default"],["S2-C06","Semantics",100,3,"color.link.hover","color.link.hover","color.link.hover","color.link.hover","color.link.inline.hover"],["S2-C07","Semantics",80,4,"color.selection.background","color.selection.background","color.selection.background","color.background.selection","color.selection.background"],["S2-C08","Semantics",100,4,"color.notice.urgent","color.notice.urgent","color.notice.urgent","color.notice.urgent","color.notice.urgent"],["S2-C09","Typography",80,10,"typography.masthead","typography.masthead","typography.masthead","typography.masthead","typography.masthead.lettering"],["S2-C10","Typography",40,8,"typography.article.headline","typography.article.headline","typography.headline.article","type.headline","typography.headline.article"],["S2-C11","Typography",20,13,"typography.article.body","typography.article.body","typography.body.article","typography.article.prose","typography.body.article.longform"],["S2-C12","Typography",0,11,"typography.meta","typography.article.metadata","typography.meta","type.meta","typography.meta.byline"],["S2-C13","Foundations",80,5,"space.meta.compact","spacing.metadata.compact","space.meta.compact","space.meta","spacing.metadata.compact"],["S2-C14","Foundations",0,10,"space.article.section.gap","spacing.article.section","space.article.section","space.section","space.section.generous"],["S2-C15","Foundations",40,4,"radius.article.image","radius.article.image","radius.image.article","radius.image","radius.image.article"],["S2-C16","Foundations",20,7,"shadow.story.card.overlay","shadow.story.card.overlay","elevation.card.overlay","elevation.card.overlay","elevation.card.overlay"],["S2-C17","Components",20,8,"color.issue.nav.item.active","color.issue.nav.active","color.nav.issue.active","color.issue.navigation.item.active","color.nav.issue.active"],["S2-C18","Components",0,13,"color.story.card.border","color.story.card.border","color.card.story.border","color.story.preview.card.border","color.border.card.preview"],["S2-C19","Components",20,8,"size.article.prose.max.width","size.article.prose.max.width","size.article.prose.max.width","measure.prose","layout.prose.max.width"],["S2-C20","Components",100,2,"breakpoint.article.wide","breakpoint.article.wide","breakpoint.article.wide","breakpoint.article.wide","breakpoint.layout.article.wide"],["S3-C01","Primitives",100,1,"color.brand.primary","color.brand.primary","color.brand.primary","color.brand.primary","color.brand.primary"],["S3-C02","Primitives",60,6,"color.background.page","color.background.storefront","color.background.page","color.background.page","color.surface.page"],["S3-C03","Primitives",100,4,"color.surface.product.card","color.surface.product.card","color.surface.product.card","color.surface.product.card","color.surface.product.card"],["S3-C04","Primitives",100,1,"color.neutral.strongest","color.neutral.strongest","color.neutral.strongest","color.neutral.strongest","color.neutral.strongest"],["S3-C05","Semantics",20,7,"color.status.in.stock","color.status.inventory.available","color.status.in.stock","color.status.available","color.status.available"],["S3-C06","Semantics",20,7,"color.status.out.of.stock","color.status.inventory.unavailable","color.status.out.of.stock","color.status.unavailable","color.status.unavailable"],["S3-C07","Semantics",100,3,"color.action.purchase.default","color.action.purchase.default","color.action.purchase.default","color.action.purchase.default","color.action.purchase.default"],["S3-C08","Semantics",100,3,"color.action.purchase.disabled","color.action.purchase.disabled","color.action.purchase.disabled","color.action.purchase.disabled","color.action.purchase.disabled"],["S3-C09","Typography",100,3,"typography.product.detail.title","typography.product.detail.title","typography.product.title","typography.product.detail.title","typography.product.title"],["S3-C10","Typography",60,6,"typography.product.price.current","typography.product.price.current","typography.product.price","typography.product.price.current","typography.product.price.current"],["S3-C11","Typography",60,6,"typography.product.description.default","typography.product.description","typography.product.description","typography.product.description","typography.product.description.body"],["S3-C12","Typography",20,9,"typography.product.meta.small","typography.product.meta","typography.product.meta","typography.product.detail.meta","typography.product.meta.small"],["S3-C13","Foundations",20,9,"space.product.attribute.gap","spacing.product.attribute.compact","space.product.attribute.gap","space.product.attribute.gap","spacing.product.attributes.compact"],["S3-C14","Foundations",0,14,"space.product.page.region.gap","spacing.product.detail.region","space.product.region.gap","space.product.page.region.gap","spacing.product.regions.large"],["S3-C15","Foundations",100,3,"radius.product.card","radius.product.card","radius.product.card","radius.product.card","radius.product.card"],["S3-C16","Foundations",80,5,"elevation.cart.drawer","shadow.cart.drawer","elevation.cart.drawer","elevation.cart.drawer","shadow.cart.drawer"],["S3-C17","Components",40,9,"color.button.add.to.cart.background","color.background.button.add.to.cart","color.button.add.to.cart.background","color.button.add.to.cart.background","color.action.add.to.cart.background"],["S3-C18","Components",100,6,"color.badge.sale.background","color.background.badge.sale","color.badge.sale.background","color.badge.sale.background","color.badge.sale.background"],["S3-C19","Components",60,10,"space.product.grid.gap","spacing.product.grid.card","space.product.grid.gap","space.product.grid.gap","spacing.product.grid.gap"],["S3-C20","Components",40,8,"breakpoint.product.grid.expand","breakpoint.product.grid.columns","breakpoint.product.grid.columns","breakpoint.product.grid.columns","breakpoint.grid.product.expand"],["S4-C01","Primitives",100,1,"color.brand.primary","color.brand.primary","color.brand.primary","color.brand.primary","color.brand.primary"],["S4-C02","Primitives",40,5,"color.bg.page","color.background.page","color.background.base","color.background.page","color.background.base"],["S4-C03","Primitives",80,5,"color.bg.section.contrast","color.background.section.contrast","color.background.contrast","color.background.contrast","color.background.contrast"],["S4-C04","Primitives",0,7,"color.border.subtle","color.border.decorative.subtle","color.border.subtle","color.line.decorative","color.border.decorative"],["S4-C05","Semantics",100,3,"color.text.strong","color.text.primary","color.text.strong","color.text.strong","color.text.strong"],["S4-C06","Semantics",0,4,"color.text.muted","color.text.secondary","color.text.muted","color.text.supporting","color.text.supporting"],["S4-C07","Semantics",80,4,"color.action.primary","color.action.primary","color.action.default","color.action.default","color.action.primary"],["S4-C08","Semantics",100,3,"color.focus.ring","color.focus.indicator","color.focus.ring","color.focus.indicator","color.focus.indicator"],["S4-C09","Typography",20,10,"text.hero.display","typography.hero.statement","typography.hero.statement","typography.hero.statement","type.hero.statement"],["S4-C10","Typography",20,9,"text.heading.service.group","typography.heading.service.group","typography.heading.service.group","type.heading.service.group","type.service.group.heading"],["S4-C11","Typography",20,8,"text.body.default","typography.body.marketing","typography.body.default","typography.body.default","type.body.marketing"],["S4-C12","Typography",20,11,"text.testimonial.attribution","typography.testimonial.attribution","typography.testimonial.attribution","typography.attribution.testimonial","type.testimonial.attribution"],["S4-C13","Foundations",40,7,"space.gap.compact","spacing.content.compact","space.group.compact","space.group.compact","space.group.compact"],["S4-C14","Foundations",40,6,"space.section.block","spacing.section.vertical","space.section.gap","space.section.vertical","space.section.major"],["S4-C15","Foundations",20,6,"radius.form.control","radius.control","radius.form.control","radius.form.control.default","radius.control.form"],["S4-C16","Foundations",0,9,"shadow.card.featured","shadow.card.case.study.featured","shadow.card.featured","elevation.case.study.featured","shadow.case.study.featured"],["S4-C17","Components",20,8,"button.consultation.bg","color.action.consultation.background","button.consultation.background","color.consultation.button.background","component.consultation.button.background"],["S4-C18","Components",20,10,"button.consultation.text","color.action.consultation.label","button.consultation.label","color.consultation.button.label","component.consultation.button.foreground"],["S4-C19","Components",40,6,"card.testimonial.padding","spacing.card.testimonial.padding","card.testimonial.padding","space.testimonial.card.padding","space.card.testimonial.padding"],["S4-C20","Components",80,6,"size.section.max.width","size.section.marketing.max.width","size.section.max.width","size.section.max.width","layout.section.max.width"],["S5-C01","Primitives",60,5,"color.brand.primary","color.brand.primary","color.brand.500","color.brand","color.brand.primary"],["S5-C02","Primitives",80,6,"color.neutral.50","color.neutral.050","color.neutral.50","color.neutral.50","color.neutral.50"],["S5-C03","Primitives",100,3,"color.neutral.500","color.neutral.500","color.neutral.500","color.neutral.500","color.neutral.500"],["S5-C04","Primitives",80,5,"color.neutral.950","color.neutral.950","color.neutral.950","color.neutral.950","color.neutral.950"],["S5-C05","Semantics",100,4,"color.surface.page","color.surface.page","color.surface.page","color.surface.page","color.surface.page"],["S5-C06","Semantics",80,5,"color.text.default","color.content.default","color.text.default","color.text.default","color.text.primary"],["S5-C07","Semantics",60,4,"color.feedback.success","color.status.success","color.success","color.status.success","color.status.success"],["S5-C08","Semantics",0,8,"color.feedback.danger","color.action.destructive","color.danger","color.action.destructive","color.status.danger"],["S5-C09","Typography",0,12,"typography.display.xl","typography.display.large","font.size.display.xl","typography.display.xl","type.display.xl"],["S5-C10","Typography",0,10,"typography.heading.md","typography.heading.medium","font.size.heading.md","typography.heading.md","type.heading.md"],["S5-C11","Typography",0,11,"typography.body.md","typography.body.default","font.size.body.md","typography.body","type.body.md"],["S5-C12","Typography",0,16,"typography.caption.sm","typography.supporting.small","text.caption","typography.supporting.xs","type.caption.xs"],["S5-C13","Foundations",20,10,"space.1","space.1","space.xs","space.xs","space.1"],["S5-C14","Foundations",20,11,"space.md","spacing.step.medium","space.md","space.md","space.4"],["S5-C15","Foundations",100,3,"radius.control","radius.control","radius.control","radius.control","radius.control.md"],["S5-C16","Foundations",60,7,"shadow.overlay","elevation.overlay.default","shadow.overlay","elevation.overlay","shadow.overlay"],["S5-C17","Components",20,11,"button.background.default","color.button.background.default","button.bg","color.button.background.default","component.button.background.default"],["S5-C18","Components",0,8,"color.input.border.invalid","color.field.border.invalid","field.border.invalid","color.field.border.invalid","component.field.border.invalid"],["S5-C19","Components",0,6,"space.card.padding","spacing.card.padding","card.padding","space.card.padding","component.card.padding.default"],["S5-C20","Components",0,4,"breakpoint.nav.expanded","breakpoint.navigation.expanded","breakpoint.nav.expanded","breakpoint.navigation.expand","breakpoint.nav.expand"]];
+const needDesc = {"S1-C01":"The central product-brand color","S1-C02":"The lowest page background layer","S1-C03":"A raised panel background layer","S1-C04":"A subtle divider color","S1-C05":"Primary readable text","S1-C06":"De-emphasized supporting text","S1-C07":"The default primary action color","S1-C08":"The hovered primary action color","S1-C09":"The largest dashboard page heading","S1-C10":"A heading for a dashboard section","S1-C11":"Default interface body copy","S1-C12":"Compact metadata and helper copy","S1-C13":"The smallest repeated interface gap","S1-C14":"The standard content-group gap","S1-C15":"The corner rounding used by controls","S1-C16":"The elevation used by floating panels","S1-C17":"The primary button background","S1-C18":"The primary button label color","S1-C19":"The internal padding of a KPI card","S1-C20":"The maximum width of the main content region","S2-C01":"The publication's distinctive accent color","S2-C02":"The base reading-page background","S2-C03":"The strongest ink-like color","S2-C04":"A quiet rule or separator color","S2-C05":"The default inline-link color","S2-C06":"The hovered inline-link color","S2-C07":"The background of selected text","S2-C08":"The color used for urgent editorial notices","S2-C09":"The publication masthead lettering","S2-C10":"The main article headline","S2-C11":"Long-form article copy","S2-C12":"Bylines, dates, and reading-time copy","S2-C13":"A compact spacing step for metadata","S2-C14":"A generous spacing step between article sections","S2-C15":"The corner rounding used by article imagery","S2-C16":"The elevation used by an overlaid story card","S2-C17":"The active issue-navigation item color","S2-C18":"The border color of a story preview card","S2-C19":"The readable maximum width of article prose","S2-C20":"The viewport threshold for the wide article layout","S3-C01":"The store's main brand color","S3-C02":"The storefront page background","S3-C03":"The product-card surface color","S3-C04":"The strongest neutral color","S3-C05":"The color indicating an available product","S3-C06":"The color indicating an unavailable product","S3-C07":"The default purchase-action color","S3-C08":"The disabled purchase-action color","S3-C09":"A product-detail title","S3-C10":"The current product price","S3-C11":"Default product-description copy","S3-C12":"Small inventory and shipping copy","S3-C13":"The gap between compact product attributes","S3-C14":"The gap between major product-page regions","S3-C15":"The corner rounding used by product cards","S3-C16":"The elevation used by the cart drawer","S3-C17":"The add-to-cart button background","S3-C18":"The sale-badge background","S3-C19":"The gap between cards in a product grid","S3-C20":"The viewport threshold where the product grid gains columns","S4-C01":"The firm's primary identity color","S4-C02":"The base page background","S4-C03":"A contrasting section background","S4-C04":"A restrained decorative-line color","S4-C05":"The strongest heading and body text color","S4-C06":"The supporting-copy color","S4-C07":"The default call-to-action color","S4-C08":"The keyboard-focus indicator color","S4-C09":"The high-impact hero statement","S4-C10":"A heading introducing a service group","S4-C11":"Default marketing body copy","S4-C12":"Testimonial attribution copy","S4-C13":"The compact gap used inside small content groups","S4-C14":"The vertical separation between major page sections","S4-C15":"The corner rounding used by form controls","S4-C16":"The elevation used by a featured case-study card","S4-C17":"The consultation button background","S4-C18":"The consultation button label color","S4-C19":"The internal padding of a testimonial card","S4-C20":"The maximum width of a standard marketing section","S5-C01":"The foundational brand hue","S5-C02":"The lightest neutral step","S5-C03":"A middle neutral step","S5-C04":"The darkest neutral step","S5-C05":"The default page surface","S5-C06":"The default readable content color","S5-C07":"The color communicating successful completion","S5-C08":"The color communicating a destructive action","S5-C09":"The largest display-text role","S5-C10":"A middle-level content heading","S5-C11":"The default paragraph role","S5-C12":"The smallest supporting-text role","S5-C13":"The smallest nonzero spacing step","S5-C14":"A middle spacing step","S5-C15":"The standard control corner rounding","S5-C16":"The standard floating-overlay elevation","S5-C17":"The default button background","S5-C18":"The invalid form-field border","S5-C19":"The internal padding of a generic card","S5-C20":"The viewport threshold where compact navigation becomes expanded"};
+
+/* ---------- helpers ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+const $ = id => document.getElementById(id);
+function el(tag, attrs, parent, text){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); if(text!=null) e.textContent=text; parent.appendChild(e); return e; }
+const tip = $('tip');
+function hover(node, html){
+  node.classList.add('hit');
+  node.addEventListener('mousemove', ev => { tip.innerHTML = html; tip.classList.add('on'); const w = tip.offsetWidth, h = tip.offsetHeight; let x = ev.clientX + 14, y = ev.clientY + 14; if (x + w > innerWidth - 8) x = ev.clientX - w - 14; if (y + h > innerHeight - 8) y = ev.clientY - h - 14; tip.style.left = x + 'px'; tip.style.top = y + 'px'; });
+  node.addEventListener('mouseleave', () => tip.classList.remove('on'));
+}
+function barH(svg, x, y, w, h, fill, r=4){ const rr=Math.min(r,Math.max(w,0.01)/2,h/2); const d=`M${x},${y} H${x+w-rr} a${rr},${rr} 0 0 1 ${rr},${rr} V${y+h-rr} a${rr},${rr} 0 0 1 -${rr},${rr} H${x} Z`; return el('path',{d,fill},svg); }
+function barV(svg, x, y, w, h, fill, r=4){ const rr=Math.min(r,w/2,Math.max(h,0.01)/2); const d=`M${x},${y+h} V${y+rr} a${rr},${rr} 0 0 1 ${rr},-${rr} H${x+w-rr} a${rr},${rr} 0 0 1 ${rr},${rr} V${y+h} Z`; return el('path',{d,fill},svg); }
+function seq(v, max=100){ const t=Math.max(0,Math.min(1,v/max)); const i=Math.round(t*5); return `var(--seq-${i})`; }
+function seqInk(v,max=100){ return v/max>=0.5 ? 'var(--bg)' : 'var(--ink)'; }
+function legend(s, x, y, items){ items.forEach(([name,fill],j)=>{ el('rect',{x:x+j*140,y,width:10,height:10,rx:2,fill},s); el('text',{x:x+j*140+14,y:y+9,class:'ax'},s,name); }); }
+
+/* roots: horizontal bars, single hue */
+(function(){
+  const s=$('roots'); const L=110,R=470,T=10,rh=21,bh=13; const sc=v=>L+(R-L)*v/1000;
+  [0,250,500,750,1000].forEach(v=>{ el('line',{x1:sc(v),x2:sc(v),y1:T-4,y2:T+rootsAll.length*rh-4,class:'grid'},s); el('text',{x:sc(v),y:T+rootsAll.length*rh+8,'text-anchor':'middle',class:'ax'},s,v); });
+  rootsAll.forEach(([w,v],i)=>{ const y=T+i*rh; el('text',{x:L-10,y:y+bh-2,'text-anchor':'end',class:w==='other'?'ax':'tk'},s,w); const p=barH(s,L,y,sc(v)-L,bh,i<8?'var(--seq-4)':'var(--seq-2)'); hover(p,`<b>${w}</b><br>${v} of 2,000 names start with this word (${(v/20).toFixed(1)}%)`); el('text',{x:sc(v)+5,y:y+bh-2,class:'ax'},s,v); });
+  el('text',{x:L,y:T+rootsAll.length*rh+26,class:'ax'},s,'names out of 2,000. Dark bars: the eight words that cover 88%.');
+})();
+
+/* segment histogram: all names */
+(function(){
+  const s=$('seghist'); const L=50,R=490,T=20,B=250; const bins=[2,3,4,5,6]; const gw=(R-L)/bins.length; const sc=v=>B-(B-T)*v/1200;
+  [0,300,600,900,1200].forEach(v=>{ el('line',{x1:L,x2:R,y1:sc(v),y2:sc(v),class:'grid'},s); el('text',{x:L-8,y:sc(v)+4,'text-anchor':'end',class:'ax'},s,v); });
+  bins.forEach((b,i)=>{ const v=segAll[b]; const x=L+i*gw+gw*0.2, w=gw*0.6; const p=barV(s,x,sc(v),w,B-sc(v),b===3?'var(--seq-5)':'var(--seq-3)'); hover(p,`<b>${b} words</b><br>${v} of 2,000 names (${(v/20).toFixed(1)}%)`); el('text',{x:x+w/2,y:sc(v)-6,'text-anchor':'middle',class:'val'},s,(v/20).toFixed(0)+'%'); el('text',{x:x+w/2,y:B+18,'text-anchor':'middle'},s,b+' words'); });
+})();
+
+/* roles: horizontal, human labels, two tiers */
+(function(){
+  const s=$('roles'); const order=['Semantics','Primitives','Foundations','Components','Typography']; const L=330,R=960,T=16,rh=50,bh=14; const sc=v=>L+(R-L)*v/100;
+  [0,25,50,75,100].forEach(v=>{ el('line',{x1:sc(v),x2:sc(v),y1:T-6,y2:T+order.length*rh-12,class:'grid'},s); el('text',{x:sc(v),y:T+order.length*rh+2,'text-anchor':'middle',class:'ax'},s,v+'%'); });
+  order.forEach((r,i)=>{ const y=T+i*rh; const [a,m]=roleTier[r]; el('text',{x:L-12,y:y+bh+3,'text-anchor':'end'},s,roleHuman[r]);
+    const p1=barH(s,L,y,sc(m)-L,bh,'var(--seq-3)'); hover(p1,`<b>${roleHuman[r]}</b><br>${m}% of tokens: three or more models agreed`); el('text',{x:sc(m)+6,y:y+bh-2,class:'val'},s,m+'%');
+    const p2=barH(s,L,y+bh+2,sc(a)-L,bh,'var(--seq-5)'); hover(p2,`<b>${roleHuman[r]}</b><br>${a}% of tokens: all five models agreed`); el('text',{x:sc(a)+6,y:y+2*bh,class:'ax'},s,a+'%'); });
+  legend(s, L, T+order.length*rh+16, [['three or more agree','var(--seq-3)'],['all five agree','var(--seq-5)']]);
+})();
+
+/* scenario bars */
+(function(){
+  const s=$('scen'); const order=['S3','S1','S2','S5','S4']; const L=165,R=490,T=16,rh=48,bh=14; const sc=v=>L+(R-L)*v/100;
+  [0,25,50,75,100].forEach(v=>{ el('line',{x1:sc(v),x2:sc(v),y1:T-6,y2:T+order.length*rh-12,class:'grid'},s); el('text',{x:sc(v),y:T+order.length*rh+2,'text-anchor':'middle',class:'ax'},s,v+'%'); });
+  order.forEach((c,i)=>{ const y=T+i*rh; const [a,m]=scenTier[c]; el('text',{x:L-12,y:y+bh+3,'text-anchor':'end'},s,scenName[c]);
+    const p1=barH(s,L,y,sc(m)-L,bh,'var(--seq-3)'); hover(p1,`<b>${scenName[c]}</b><br>${m}% majority`); el('text',{x:sc(m)+6,y:y+bh-2,class:'val'},s,m+'%');
+    const p2=barH(s,L,y+bh+2,sc(a)-L,bh,'var(--seq-5)'); hover(p2,`<b>${scenName[c]}</b><br>${a}% unanimous`); el('text',{x:sc(a)+6,y:y+2*bh,class:'ax'},s,a+'%'); });
+  legend(s, L, T+order.length*rh+16, [['three or more agree','var(--seq-3)'],['all five agree','var(--seq-5)']]);
+})();
+
+/* role x scenario heatmap */
+(function(){
+  const s=$('rolescen'); const L=170,T=40,cw=160,ch=50,g=4; const short={Primitives:'Color primitives',Semantics:'Color roles',Typography:'Typography',Foundations:'Spacing & depth',Components:'Components'};
+  roles.forEach((r,j)=>el('text',{x:L+j*cw+cw/2,y:T-14,'text-anchor':'middle'},s,short[r]));
+  scen.forEach((sc,i)=>{ el('text',{x:L-12,y:T+i*ch+ch/2+4,'text-anchor':'end'},s,scenName[sc]);
+    roles.forEach((r,j)=>{ const v=roleScen[sc][r]; const x=L+j*cw+g/2,y=T+i*ch+g/2; const c=el('rect',{x,y,width:cw-g,height:ch-g,rx:5,fill:seq(v)},s); hover(c,`<b>${scenName[sc]} · ${short[r]}</b><br>${v}% of 20 tokens got the same name from three or more models`);
+      const t=el('text',{x:x+(cw-g)/2,y:y+(ch-g)/2+5,'text-anchor':'middle',class:'cell-t'},s,v+'%'); t.style.fill=seqInk(v); }); });
+  const ly=T+5*ch+14; [0,1,2,3,4,5].forEach(i=>el('rect',{x:L+i*22,y:ly,width:20,height:10,rx:2,fill:`var(--seq-${i})`},s)); el('text',{x:L+6*22+8,y:ly+9,class:'ax'},s,'0% → 100% of tokens where three or more models agreed');
+})();
+
+/* self consistency grouped bars */
+(function(){
+  const s=$('selfcons'); const L=60,R=990,T=30,B=240; const gw=(R-L)/roles.length, bw=(gw-40)/M.length; const sc=v=>B-(B-T)*v/100; const short={Primitives:'Color primitives',Semantics:'Color roles',Typography:'Typography',Foundations:'Spacing & depth',Components:'Components'};
+  [0,25,50,75,100].forEach(v=>{ el('line',{x1:L,x2:R,y1:sc(v),y2:sc(v),class:'grid'},s); el('text',{x:L-8,y:sc(v)+4,'text-anchor':'end',class:'ax'},s,v+'%'); });
+  roles.forEach((r,i)=>{ const gx=L+i*gw+20; el('text',{x:gx+(gw-40)/2,y:B+20,'text-anchor':'middle'},s,short[r]);
+    M.forEach((m,j)=>{ const v=selfRole[m][r]; const x=gx+j*bw+1; const p=barV(s,x,sc(v),bw-2,B-sc(v),COL[m]); hover(p,`<b>${LABEL[m]} · ${short[r]}</b><br>repeated its own name ${v}% of the time`); el('text',{x:x+(bw-2)/2,y:sc(v)-5,'text-anchor':'middle',class:'ax'},s,Math.round(v)); }); });
+  M.forEach((m,j)=>{ el('rect',{x:L+j*110,y:B+36,width:10,height:10,rx:2,fill:COL[m]},s); el('text',{x:L+j*110+14,y:B+45,class:'ax'},s,LABEL[m]); });
+})();
+
+/* forks small multiples */
+function forkChart(id, groups){
+  const s=$(id); const pw=320; const bh=9;
+  groups.forEach((f,fi)=>{ const ox=10+fi*(pw+10);
+    const g=el('g',{transform:`translate(${ox},0)`},s); const t=el('text',{x:0,y:14,class:'val'},g,f.t); t.style.fontSize='14px';
+    const L=96,R=pw-16; const sc=v=>L+(R-L)*v/100; let y=30; const H=f.w.length*(M.length*(bh+1)+12);
+    [0,50,100].forEach(v=>{ el('line',{x1:sc(v),x2:sc(v),y1:24,y2:24+H,class:'grid'},g); el('text',{x:sc(v),y:24+H+12,'text-anchor':'middle',class:'ax'},g,v); });
+    f.w.forEach(([w,c])=>{ el('text',{x:L-8,y:y+2.5*bh+3,'text-anchor':'end',class:'tk'},g,w);
+      M.forEach((m,j)=>{ const v=c[m]; const p=barH(g,L,y+j*(bh+1),Math.max(sc(v)-L,v>0?2:0),bh,COL[m]); hover(p,`<b>${LABEL[m]}</b> · <span class="t">${w}</span><br>${v} of 500 names`); if(v>=40) el('text',{x:sc(v)+4,y:y+j*(bh+1)+bh-1,class:'ax'},g,v); });
+      y+=M.length*(bh+1)+12; }); });
+  const ly=265; M.forEach((m,j)=>{ el('rect',{x:10+j*100,y:ly,width:10,height:10,rx:2,fill:COL[m]},s); el('text',{x:24+j*100,y:ly+9,class:'ax'},s,LABEL[m]); }); el('text',{x:990,y:ly+9,'text-anchor':'end',class:'ax'},s,'names out of 500 containing the word');
+}
+forkChart('forks-svg', forks); forkChart('forks2-svg', forks2);
+
+/* pairwise matrix */
+(function(){
+  const s=$('pairwise'); const L=92, T=36, cs=84, g=4;
+  M.forEach((m,i)=>{ el('text',{x:L+i*cs+cs/2,y:T-12,'text-anchor':'middle'},s,LABEL[m]); el('text',{x:L-10,y:T+i*cs+cs/2+4,'text-anchor':'end'},s,LABEL[m]); });
+  M.forEach((a,i)=>M.forEach((b,j)=>{ const x=L+j*cs+g/2, y=T+i*cs+g/2; let v, html;
+    if(i===j){ v=selfc[a]; html=`<b>${LABEL[a]} with itself</b><br>${v}% same name across five reorderings`; }
+    else { const k=M.indexOf(a)<M.indexOf(b)?`${a}|${b}`:`${b}|${a}`; v=pair[k]; html=`<b>${LABEL[a]} × ${LABEL[b]}</b><br>${v}% same name`; }
+    const r=el('rect',{x,y,width:cs-g,height:cs-g,rx:6,fill:i===j?'var(--surface-2)':seq(v,60)},s); if(i===j) r.setAttribute('stroke','var(--line-2)'); hover(r,html);
+    const t=el('text',{x:x+(cs-g)/2,y:y+(cs-g)/2+6,'text-anchor':'middle',class:'cell-t'},s,(i===j?'self ':'')+v.toFixed(1)+'%'); t.style.fill=i===j?'var(--ink-3)':seqInk(v,60); }));
+})();
+
+/* need grid */
+(function(){
+  const s=$('needgrid'); const L=150,T=36,cw=41,ch=44,g=3; const byS={}; needs.forEach(n=>{ (byS[n[0].slice(0,2)] ||= []).push(n); }); const short={Primitives:'Color primitives',Semantics:'Color roles',Typography:'Typography',Foundations:'Spacing & depth',Components:'Components'};
+  roles.forEach((r,i)=>{ el('text',{x:L+i*4*cw+2*cw,y:T-16,'text-anchor':'middle'},s,short[r]); el('line',{x1:L+i*4*cw+2,x2:L+(i+1)*4*cw-2,y1:T-8,y2:T-8,class:'base'},s); });
+  scen.forEach((sc,i)=>{ el('text',{x:L-12,y:T+i*ch+ch/2+4,'text-anchor':'end'},s,scenName[sc]);
+    byS[sc].forEach((n,j)=>{ const [id,role,maj,uniq,o,gp,f,gr,mu]=n; const x=L+j*cw+g/2,y=T+i*ch+g/2; const c=el('rect',{x,y,width:cw-g,height:ch-g,rx:4,fill:seq(maj)},s);
+      hover(c,`<b>${needDesc[id]}</b><br>Three or more models agreed in ${maj}% of runs · ${uniq} different names in total<br><span class="t">Opus ${o}<br>GPT ${gp}<br>Fable ${f}<br>Grok ${gr}<br>Muse ${mu}</span>`);
+      const t=el('text',{x:x+(cw-g)/2,y:y+(ch-g)/2+4,'text-anchor':'middle',class:'ax'},s,maj); t.style.fill=seqInk(maj); }); });
+  const ly=T+5*ch+14; [0,1,2,3,4,5].forEach(i=>el('rect',{x:L+i*22,y:ly,width:20,height:10,rx:2,fill:`var(--seq-${i})`},s)); el('text',{x:L+6*22+8,y:ly+9,class:'ax'},s,'0% → 100% of runs where three or more models agreed · hover for the names');
+})();
+</script>
+<script>
+(function () {
+  var buttons = document.querySelectorAll('.theme-toggle button');
+  function current() {
+    var t = document.documentElement.dataset.theme;
+    return (t === 'light' || t === 'dark') ? t : 'system';
+  }
+  function paint() {
+    var c = current();
+    buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.setTheme === c)); });
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var v = b.dataset.setTheme;
+      if (v === 'system') delete document.documentElement.dataset.theme;
+      else document.documentElement.dataset.theme = v;
+      try {
+        if (v === 'system') localStorage.removeItem('tn-theme');
+        else localStorage.setItem('tn-theme', v);
+      } catch (e) {}
+      paint();
+    });
+  });
+  paint();
+})();
+</script>
+</body>
+</html>

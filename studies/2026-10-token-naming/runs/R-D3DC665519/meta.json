@@ -1,0 +1,17 @@
+{
+  "sequence": 42,
+  "run_id": "R-D3DC665519",
+  "pair_key": "S3-V5",
+  "scenario_id": "S3",
+  "variant": 5,
+  "cohort": "gpt",
+  "model": "gpt-5.6-sol-medium",
+  "prompt_file": "prompts/S3-V5.txt",
+  "prompt_sha256": "a24b0ef2225c6722148b4720ee67f834a854f4cccd850e79f70eb1a5d11db3f4",
+  "status": "pending",
+  "agent_id": "23ca8880-c0e4-4e72-a3d0-e04944385850",
+  "captured_at": "2026-10-13T20:31:55.946Z",
+  "completion_status": "success",
+  "agent_tool_calls": [],
+  "isolation_status": "clean"
+}

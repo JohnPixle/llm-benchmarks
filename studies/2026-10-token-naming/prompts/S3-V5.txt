@@ -1,0 +1,33 @@
+You are completing one isolated naming task. Do not use tools, inspect files, browse, or ask questions.
+
+Context: A modern storefront with category navigation, product grids, product detail pages, price and inventory states, a cart drawer, and checkout actions.
+
+Create one design-token identifier for each concept below. Choose the naming syntax, hierarchy, vocabulary, prefixes, separators, and casing you consider most appropriate. Do not omit, combine, or add concepts.
+
+- S3-C17: The add-to-cart button background
+- S3-C18: The sale-badge background
+- S3-C19: The gap between cards in a product grid
+- S3-C20: The viewport threshold where the product grid gains columns
+- S3-C01: The store's main brand color
+- S3-C02: The storefront page background
+- S3-C03: The product-card surface color
+- S3-C04: The strongest neutral color
+- S3-C05: The color indicating an available product
+- S3-C06: The color indicating an unavailable product
+- S3-C07: The default purchase-action color
+- S3-C08: The disabled purchase-action color
+- S3-C09: A product-detail title
+- S3-C10: The current product price
+- S3-C11: Default product-description copy
+- S3-C12: Small inventory and shipping copy
+- S3-C13: The gap between compact product attributes
+- S3-C14: The gap between major product-page regions
+- S3-C15: The corner rounding used by product cards
+- S3-C16: The elevation used by the cart drawer
+
+Return JSON only. Do not use Markdown fences, commentary, rationale, or additional keys.
+
+Required shape:
+{"schema_version":"1","items":[{"concept_id":"an ID from the list","token":"your identifier"}]}
+
+The items array must contain exactly 20 objects, one for every supplied concept ID.

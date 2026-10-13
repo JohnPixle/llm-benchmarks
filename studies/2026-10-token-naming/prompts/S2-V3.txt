@@ -1,0 +1,33 @@
+You are completing one isolated naming task. Do not use tools, inspect files, browse, or ask questions.
+
+Context: A digital magazine with a masthead, issue navigation, feature stories, article pages, author metadata, pull quotes, and newsletters.
+
+Create one design-token identifier for each concept below. Choose the naming syntax, hierarchy, vocabulary, prefixes, separators, and casing you consider most appropriate. Do not omit, combine, or add concepts.
+
+- S2-C09: The publication masthead lettering
+- S2-C10: The main article headline
+- S2-C11: Long-form article copy
+- S2-C12: Bylines, dates, and reading-time copy
+- S2-C13: A compact spacing step for metadata
+- S2-C14: A generous spacing step between article sections
+- S2-C15: The corner rounding used by article imagery
+- S2-C16: The elevation used by an overlaid story card
+- S2-C17: The active issue-navigation item color
+- S2-C18: The border color of a story preview card
+- S2-C19: The readable maximum width of article prose
+- S2-C20: The viewport threshold for the wide article layout
+- S2-C01: The publication's distinctive accent color
+- S2-C02: The base reading-page background
+- S2-C03: The strongest ink-like color
+- S2-C04: A quiet rule or separator color
+- S2-C05: The default inline-link color
+- S2-C06: The hovered inline-link color
+- S2-C07: The background of selected text
+- S2-C08: The color used for urgent editorial notices
+
+Return JSON only. Do not use Markdown fences, commentary, rationale, or additional keys.
+
+Required shape:
+{"schema_version":"1","items":[{"concept_id":"an ID from the list","token":"your identifier"}]}
+
+The items array must contain exactly 20 objects, one for every supplied concept ID.

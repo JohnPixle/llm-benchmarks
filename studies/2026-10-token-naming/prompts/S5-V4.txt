@@ -1,0 +1,33 @@
+You are completing one isolated naming task. Do not use tools, inspect files, browse, or ask questions.
+
+Context: A reusable website foundation intended to support content pages, marketing sections, forms, navigation, cards, dialogs, and responsive layouts.
+
+Create one design-token identifier for each concept below. Choose the naming syntax, hierarchy, vocabulary, prefixes, separators, and casing you consider most appropriate. Do not omit, combine, or add concepts.
+
+- S5-C13: The smallest nonzero spacing step
+- S5-C14: A middle spacing step
+- S5-C15: The standard control corner rounding
+- S5-C16: The standard floating-overlay elevation
+- S5-C17: The default button background
+- S5-C18: The invalid form-field border
+- S5-C19: The internal padding of a generic card
+- S5-C20: The viewport threshold where compact navigation becomes expanded navigation
+- S5-C01: The foundational brand hue
+- S5-C02: The lightest neutral step
+- S5-C03: A middle neutral step
+- S5-C04: The darkest neutral step
+- S5-C05: The default page surface
+- S5-C06: The default readable content color
+- S5-C07: The color communicating successful completion
+- S5-C08: The color communicating a destructive action
+- S5-C09: The largest display-text role
+- S5-C10: A middle-level content heading
+- S5-C11: The default paragraph role
+- S5-C12: The smallest supporting-text role
+
+Return JSON only. Do not use Markdown fences, commentary, rationale, or additional keys.
+
+Required shape:
+{"schema_version":"1","items":[{"concept_id":"an ID from the list","token":"your identifier"}]}
+
+The items array must contain exactly 20 objects, one for every supplied concept ID.
