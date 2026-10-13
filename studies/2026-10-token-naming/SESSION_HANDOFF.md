@@ -49,7 +49,7 @@ Blind benchmark of design-token naming across five models (Claude Opus 5.5, GPT-
 1. Deferred by user: evaluate Delta Theme's design system for agent-friendliness (tokens.json metadata, abilities, skills). Do not mix with the blind dataset.
 2. Optional: blinded human quality ratings as a second study phase.
 3. Optional: additional cohorts via `extraCohorts` in `scripts/generate.mjs` (append-only).
-4. Commit or publish the benchmark project when its destination is chosen.
+4. The repo is github.com/JohnPixle/llm-benchmarks (private, created 14 Oct 2026). Before making it public, decide whether the study's internal docs (REPORT.md, EXPERIMENT.md, AGENTS.md, this file) should keep their references to the design system the study was run for.
 
 ## Fixed pitfall
 
