@@ -6,7 +6,7 @@ A research area and a playground for experimentation. Each study here tests how 
 
 | Study | Question | Status | Report |
 |---|---|---|---|
-| [Token Naming Instinct](studies/2026-10-token-naming/) | When five models name the same 500 design tokens blind, which names do they agree on? | Complete | [HTML](reports/2026-10-token-naming/report.html) · [Markdown](reports/2026-10-token-naming/report-first-edition.md) · [Dataset](reports/2026-10-token-naming/dataset.zip) |
+| [Token Naming Instinct](studies/2026-10-token-naming/) | When five models name the same 500 design tokens blind, which names do they agree on? | Complete | [HTML](reports/2026-10-token-naming/report.html) · [Dataset](reports/2026-10-token-naming/dataset.zip) |
 
 ## Layout
 
